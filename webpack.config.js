@@ -8,8 +8,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'baseform.js',
-    library: 'base-form',
+    filename: 'el-base-form.js',
+    library: 'el-base-form',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
