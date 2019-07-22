@@ -1,14 +1,5 @@
 # el-base-form
 
-![npm](https://img.shields.io/npm/v/ele-base-form.svg)
-![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/ele-base-form.svg)
-![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/ele-base-form.svg)
-![npm](https://img.shields.io/npm/dw/ele-base-form.svg?style=popout)
-![npm](https://img.shields.io/npm/dm/ele-base-form.svg?style=popout)
-![npm](https://img.shields.io/npm/l/ele-base-form.svg)
-
-[![NPM](https://nodei.co/npm/ele-base-form.png)](https://nodei.co/npm/ele-base-form/)
-
 >ele-base-form 是一个基于element-ui组件的vue插件。项目实现效果为以简约的、配置化方式表达form表单，提供常用的表单关联入口，支持远程校验等，旨在为存在大量表单的后台管理系统开发提供便利。
 
 ## 快速使用
