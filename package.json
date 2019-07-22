@@ -5,7 +5,7 @@
   "author": "zhuwenqi <896111958@qq.com>",
   "license": "MIT",
   "private": false,
-  "main": "dist/baseform.js",
+  "main": "dist/el-base-form.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --port 8088",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
