@@ -13,7 +13,7 @@
 
 ## 快速使用
 ```
-$ npm i --save base-form
+$ npm i --save el-base-form
 ```
 
 
