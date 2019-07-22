@@ -250,7 +250,6 @@ export default {
     },
     // change emit
     handleChange (value) {
-      debugger
       const { change, formrefname } = this
       if (change) {
         change(value, formrefname)
