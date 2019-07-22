@@ -4,7 +4,7 @@ var webpack = require('webpack')
 // const NODE_ENV = process.env.NODE_ENV
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
