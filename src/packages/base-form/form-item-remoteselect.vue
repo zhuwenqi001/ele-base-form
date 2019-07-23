@@ -1,6 +1,7 @@
 <template>
   <el-select
     v-model="value"
+    v-loading="loading"
     :disabled="disabled"
     :placeholder="placeholder"
     @focus="loadData"
@@ -16,7 +17,7 @@
 </template>
 <script>
 import { formItemProps } from './props'
-import httpService from '../utils/httpService'
+import httpService from '../../utils/httpService'
 
 export default {
   name: 'Remoteselect',
@@ -26,7 +27,8 @@ export default {
       value: undefined,
       selectOptions: [],
       // 是否更新 发起请求的标志
-      updateFlg: true
+      updateFlg: true,
+      loading:false
     }
   },
   computed: {
@@ -44,6 +46,8 @@ export default {
     },
     remoteParams () {
       this.value = undefined
+      this.selectOptions = []
+      // 关联参数值发生改变 触发请求
       this.updateFlg = true
     }
   },
@@ -56,7 +60,10 @@ export default {
 
       if (!updateFlg) return
 
+      this.loading = true
       const res = await httpService.accessAPI({ hostName, apiUrl, method, params: remoteParams })
+      this.loading = false
+
       let result = res
       resultPath.forEach(item => {
         result = result[item]

@@ -1,7 +1,7 @@
-import baseForm from './packages/base-form/index.js'
+import eleBaseForm from './packages/base-form/index.js'
 
 const components = [
-  baseForm
+  eleBaseForm
 ]
 
 const install = function (Vue, opts = {}) {
@@ -17,5 +17,5 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 export default {
   install,
-  baseForm
+  eleBaseForm
 }

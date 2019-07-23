@@ -23,7 +23,7 @@ import { formGroupProps } from './props'
 import FormItem from './form-item'
 
 export default {
-  name: 'BaseForm',
+  name: 'eleBaseForm',
   components: {
     FormItem
   },
@@ -51,10 +51,7 @@ export default {
         } else {
           itemCurval = currentFormValue[prop]
         }
-        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname }, form, { disabled })
-        if (form.hostName !== undefined) {
-          Object.assign({ hostName }, _form)
-        }
+        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname,hostName }, form, { disabled })
         return _form
       })
     }

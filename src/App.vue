@@ -3,7 +3,7 @@
     id="app"
     class="base-form"
   >
-    <base-form v-bind="formOpt" />
+    <ele-base-form v-bind="formOpt" />
     <el-row>
       <el-button
         type="primary"

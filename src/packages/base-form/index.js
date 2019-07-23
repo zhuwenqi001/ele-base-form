@@ -1,8 +1,8 @@
 
-import BaseForm from './form'
+import eleBaseForm from './form'
 
-BaseForm.install = function (Vue) {
-  Vue.component(BaseForm.name, BaseForm)
+eleBaseForm.install = function (Vue) {
+  Vue.component(eleBaseForm.name, eleBaseForm)
 }
 
-export default BaseForm
+export default eleBaseForm
