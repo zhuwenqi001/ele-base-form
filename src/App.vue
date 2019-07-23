@@ -28,8 +28,8 @@ export default {
     return {
       formOpt: {
         inline: false,
-        ref: 'baseform',
-        formrefname: 'baseform',
+        ref: 'testform',
+        formrefname: 'testform',
         hostName: 'http://10.9.35.138:8080',
         forms: [{
           label: '基本输入框',
@@ -65,8 +65,13 @@ export default {
           itemType: 'select',
           label: '本地下拉框',
           prop: 'select',
-          options: ['val1', 'val2', 'val3'],
+          options: [{ label: '数值', value: 'number' }, { label: '字符串', value: 'string' }],
           change: this.selectchange
+        }, {
+          itemType: 'number',
+          label: '关联数字框',
+          prop: 'relativeNumber',
+          visible: false
         }, {
           itemType: 'date',
           label: '日期',
@@ -103,6 +108,9 @@ export default {
           method: 'GET',
           labelkeyname: 'name',
           valuekeyname: 'name',
+          disablekeyname: 'value',
+          disableflg: 'DefaultCluster',
+          staticOptions: [{ label: '全部', value: 'all' }],
           change: this.remoteSelectChange
         }, {
           itemType: 'remoteselect',
@@ -112,7 +120,14 @@ export default {
           method: 'GET',
           remoteParams: { clusterType: 'kafka' },
           labelkeyname: 'name',
-          valuekeyname: 'name'
+          valuekeyname: 'name',
+          staticFilter: { applicant: '王强' },
+          autoget: true
+        }, {
+          itemType: 'select',
+          label: '人员',
+          prop: 'user',
+          options: ['王强']
         }, {
           itemType: 'remoteselect',
           label: '远程下拉-关联参数',
@@ -120,7 +135,7 @@ export default {
           apiUrl: '/api/consumer/queryApprovedConsumers',
           method: 'GET',
           remoteParams: { clusterType: 'kafka' },
-          relativeProp: [{ prop: 'remoteselect', paramkey: 'clusterName' }],
+          relativeProp: [{ prop: 'remoteselect', paramkey: 'clusterName' }, { prop: 'user', filterkey: 'applicant' }],
           labelkeyname: 'name',
           valuekeyname: 'name'
         }
@@ -152,8 +167,29 @@ export default {
     remoteSelectChange (val, formrefname) {
       console.log(val)
     },
+    // 关联生成item
     selectchange (val, formrefname) {
-      console.log(val)
+      const generateItem = {}
+      switch (val) {
+        case 'number':
+          Object.assign(generateItem, {
+            itemType: 'number',
+            label: '关联number',
+            prop: 'relativeNumber',
+            defaultValue: 0,
+            rules: [{ required: true, message: '请输入关联number', trigger: 'blur' }]
+          })
+          break
+        case 'string':
+          Object.assign(generateItem, {
+            itemType: 'input',
+            label: '关联输入框',
+            prop: 'relativeString',
+            defaultValue: 'test'
+          })
+          break
+      }
+      this.formOpt.forms.splice(6, 1, generateItem)
     }
   }
 }

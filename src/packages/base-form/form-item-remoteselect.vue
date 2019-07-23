@@ -4,7 +4,7 @@
     v-loading="loading"
     :disabled="disabled"
     :placeholder="placeholder"
-    @focus="loadData"
+    @focus="getRemoteData"
   >
     <el-option
       v-for="(option, i) in compoundSelectOptions"
@@ -21,7 +21,15 @@ import httpService from '../../utils/httpService'
 
 export default {
   name: 'Remoteselect',
-  props: formItemProps,
+  props: {
+    ...formItemProps,
+    relativeFilter:{
+      type:Object,
+      default:()=>{
+        return {}
+      }
+    }
+  },
   data () {
     return {
       value: undefined,
@@ -32,9 +40,17 @@ export default {
     }
   },
   computed: {
+    filterObj(){
+      const {staticFilter,relativeFilter} = this
+      return Object.assign(staticFilter,relativeFilter)
+    },
     compoundSelectOptions () {
-      const { selectOptions, staticOptions } = this
-      return selectOptions.concat(staticOptions)
+      const { selectOptions, staticOptions,filterObj} = this
+      let _compoundOptions = staticOptions.concat(selectOptions)
+      Object.keys(filterObj).forEach(item=>{
+        _compoundOptions = _compoundOptions.filter(opt=>opt[item] === filterObj[item])
+      })
+      return _compoundOptions
     }
   },
   watch: {
@@ -49,14 +65,17 @@ export default {
       this.selectOptions = []
       // 关联参数值发生改变 触发请求
       this.updateFlg = true
+    },
+    relativeFilter(){
+      this.value = undefined
     }
   },
+  created() {
+    this.autoget && this.getRemoteData()
+  },
   methods: {
-    loadData () {
-      this.getRemoteData()
-    },
     async getRemoteData () {
-      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname } = this
+      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname,autoget } = this
 
       if (!updateFlg) return
 
@@ -70,11 +89,15 @@ export default {
       })
       this.selectOptions = result.map(item => {
         return {
+          ...item,
           label: item[labelkeyname],
           value: item[valuekeyname]
         }
       })
-
+      if(autoget){
+        // 主动更新情况 设置值为第一项
+        this.value = this.selectOptions[0].value
+      }
       this.updateFlg = false
     },
     reset () {

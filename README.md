@@ -37,7 +37,6 @@ $ npm i --save ele-base-form
 | rules | 表单项验证规则 | Array | - | - |  |
 | placeholder | placeholder | String | - | 输入框默认：请输入内容 ， 下拉框：请选择 |
 | defaultValue | item 默认值 | String, Array, Number | - | - |
-| current | - | - | - | - |
 | inputType | itemType:'input' 时延伸类型 | String | 'text', 'textarea', 'email', 'password' | 'text' |
 | slots | itemType:'input/number' 时支持append、prepend插入 | Array | [{type:'append',text:''},{type:'prepend',text:''}] | - |
 | rows | itemType:'input',inputType:'textarea' 行数 | Number | - | - |
@@ -56,18 +55,17 @@ $ npm i --save ele-base-form
 | apiUrl | 请求API路径 | String | - | - |
 | method | 请求类型 | String | 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' | 'GET' | 
 | resultPath | 数据解析路径 | Array | - | ['result'] | 
-| pagination | - 下拉分页 | - | - |
+| pagination | - 下拉分页 - | - | - |
 | labelkeyname | 数据展示label选择项 | String | - | 'label' |
 | valuekeyname | 数据展示value选择项 | String | - | 'value' |
-| disablekeyname | 数据展示禁用key | String | - | - |
-| disableflg | 数据禁用flg | Boolean | - | - |
-| staticOptions | - | - | - |
+| disablekeyname | 数据展示禁用key | String | label,value.... | - |
+| disableflg | 数据禁用flg | Boolean,String | - | - |
+| staticOptions | 远程下拉框数据中添加的静态数据 | Array | - | - |
 | remoteParams | 请求静态参数 | Object | - | - |
-| relativeProp | 表单关联信息，1.被关联项修改值 重置关联项 2.值作为请求的参数 | Array | - | - |
-| staticFilter | - 静态筛选参数 | Object | - | {} |
-| relativeFilter | - 关联筛选 | Array | - | - |
-| autoget | - | - | - |
-| change | 选中回调 | - | - | - |
+| relativeProp | 表单关联信息，1.被关联项修改值 重置关联项 2.paramkey作为请求的参数.3.filterkey作为静态筛选的参数[{prop:'',paramkey:'',filterkey:''] | Array | - | - |
+| staticFilter | 下拉框静态筛选参数 | Object | - | {} |
+| autoget | 自动请求下拉列表数据 | Boolean | - | false |
+| change | 选中回调 | Function | - | - |
 
 
 

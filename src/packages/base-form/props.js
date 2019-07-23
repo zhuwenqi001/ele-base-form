@@ -181,12 +181,18 @@ export const formItemProps = {
     default: 'value'
   },
   disablekeyname: String,
-  disableflg: Boolean,
+  disableflg: [Boolean, String, Number],
   // 静态拼接数据
   staticOptions: {
     type: Array,
     default: () => {
       return []
+    }
+  },
+  staticFilter: {
+    type: Object,
+    default: () => {
+      return {}
     }
   },
   // 请求参数 静态

@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     visibleForms () {
-      return this.forms.filter(item => !item.visible)
+      return this.forms.filter(item => item.visible === undefined || item.visible === true)
     },
     showForms () {
       const { visibleForms, currentFormValue, labelWidth, disabled, hostName, formrefname } = this
