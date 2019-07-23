@@ -109,19 +109,23 @@ export default {
     },
     // 表单提交验证
     handleFormValidate (callback, e) {
-      const { getParams } = this
-      this.$refs.baseform.validate(valid => {
+      const { getParams,formrefname } = this
+      this.$refs[formrefname].validate(valid => {
         callback && typeof callback === 'function' && callback(valid, getParams(), e)
       })
     },
     // 表单重置
-    reset () {
+    reset (type) {
       const { showForms, generateKey, $refs } = this
       showForms.forEach(v => {
         const { prop } = v
         const ref = generateKey(prop)
-        $refs[ref][0].reset()
+        $refs[ref][0].reset(type)
       })
+    },
+    // 表单清空
+    clear(){
+      this.reset('clear')
     }
   }
 }

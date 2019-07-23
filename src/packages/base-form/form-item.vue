@@ -242,18 +242,19 @@ export default {
       this.value = _value
     },
     // 重置val
-    reset () {
+    reset (type) {
       const { itemType, prop } = this
-      this.value = undefined
-      if (Array.isArray(prop)) {
-        this.value = ['', '']
-      }
-      if (itemType === 'checkbox') {
-        this.value = []
-      }
       if (itemType === 'remoteselect') {
         this.$refs[`${prop}_remoteSelect`].reset()
       }
+      if(type === 'clear'){
+        this.value = undefined
+        Array.isArray(prop) && (this.value = ['', ''])
+        itemType === 'checkbox' && (this.value = [])
+      }else{
+        this.initVal()
+      }
+      
     },
     // 接收remoteSelect 值
     recieveRemoteSelectValue (obj) {

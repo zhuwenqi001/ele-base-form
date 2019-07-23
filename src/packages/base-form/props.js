@@ -223,7 +223,9 @@ export const formItemProps = {
   // 总页数位置
   pagePath: {
     type: Array,
-    default: ['result', 'pages']
+    default: () => {
+      return ['result', 'pages']
+    }
   }
 
 }

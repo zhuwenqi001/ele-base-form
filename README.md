@@ -9,6 +9,7 @@ $ npm i --save ele-base-form
 
 ## API
 ### 表单整体
+
 #### attribute
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
@@ -22,9 +23,16 @@ $ npm i --save ele-base-form
 | formrefname | 表单ref,常用场景：动态生成多个表单项，操作表单item时，item回调返回formrefname,以该参数作为找到当前表单的标志 | String | - | baseform |
 | forms | 表单配置数组 | Array | - | - |
 
+
 #### Methods
 
+| 事件名称 | 说明 | 回调参数 |
+| handleFormValidate | 根据rules验证form表单，访问方式为 this.$refs[refname].handleFormValidate | Function 接收valid,value两个参数 |
+| reset | 重置表单数据 | - |
+| clear | 清空表单数据 | - |
+
 ### 表单item
+
 #### attribute
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|

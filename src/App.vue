@@ -17,6 +17,12 @@
       >
         重置表单
       </el-button>
+      <el-button
+        type=""
+        @click="clearForms"
+      >
+        清空表单
+      </el-button>
     </el-row>
   </div>
 </template>
@@ -175,6 +181,10 @@ export default {
     // 重置表单
     resetForms () {
       this.$refs[this.formOpt.ref].reset()
+    },
+    // 清空表单
+    clearForms () {
+      this.$refs[this.formOpt.ref].clear()
     },
     remoteSelectChange (val, formrefname) {
       console.log(val)
