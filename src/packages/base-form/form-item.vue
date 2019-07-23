@@ -131,6 +131,9 @@
       :static-filter="staticFilter"
       :relative-filter="relativeFilter"
       :autoget="autoget"
+      :result-path="resultPath"
+      :pagination="pagination"
+      :page-num-key="pageNumKey"
       @recieveRemoteSelectValue="recieveRemoteSelectValue"
     />
   </el-form-item>

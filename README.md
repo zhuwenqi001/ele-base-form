@@ -55,7 +55,9 @@ $ npm i --save ele-base-form
 | apiUrl | 请求API路径 | String | - | - |
 | method | 请求类型 | String | 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' | 'GET' | 
 | resultPath | 数据解析路径 | Array | - | ['result'] | 
-| pagination | - 下拉分页 - | - | - |
+| pagination | 下拉框滚动到底部，分页请求,根据需要，配合传参remoteParams:{pageSize}| Boolean | - | false |
+| pageNumKey | 分页pageNum 参数key值 | String | - | pageNum |
+| pagePath | 总页数所在res位置 | Array | - | ['result','pages'] |
 | labelkeyname | 数据展示label选择项 | String | - | 'label' |
 | valuekeyname | 数据展示value选择项 | String | - | 'value' |
 | disablekeyname | 数据展示禁用key | String | label,value.... | - |

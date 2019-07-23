@@ -210,6 +210,20 @@ export const formItemProps = {
     default: false
   },
   // 选中回调
-  change: Function
+  change: Function,
+  pagination: {
+    type: Boolean,
+    default: false
+  },
+  // pageNum 参数名
+  pageNumKey: {
+    type: String,
+    default: 'pageNum'
+  },
+  // 总页数位置
+  pagePath: {
+    type: Array,
+    default: ['result', 'pages']
+  }
 
 }

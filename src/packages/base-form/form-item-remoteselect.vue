@@ -4,6 +4,7 @@
     v-loading="loading"
     :disabled="disabled"
     :placeholder="placeholder"
+    v-selectscroll="handleScroll"
     @focus="getRemoteData"
   >
     <el-option
@@ -36,7 +37,9 @@ export default {
       selectOptions: [],
       // 是否更新 发起请求的标志
       updateFlg: true,
-      loading:false
+      loading:false,
+      pageNum:1,
+      pages:0
     }
   },
   computed: {
@@ -75,25 +78,41 @@ export default {
   },
   methods: {
     async getRemoteData () {
-      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname,autoget } = this
+      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, autoget, pagination, pageNum, selectOptions,pageNumKey,pagePath } = this
 
       if (!updateFlg) return
 
+      const _params = Object.assign({},remoteParams)
+      if(pagination){
+        Object.assign(_params,{[pageNumKey]:pageNum})
+      }
+
       this.loading = true
-      const res = await httpService.accessAPI({ hostName, apiUrl, method, params: remoteParams })
+      const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
       this.loading = false
 
+      if(pagination){
+        let pages = res
+        pagePath.forEach(item=>{
+          pages = pages[item]
+        })
+        this.pages = pages
+      }
+
       let result = res
+      // debugger
+      // 数据位置
       resultPath.forEach(item => {
         result = result[item]
       })
+      if(!result) return
       this.selectOptions = result.map(item => {
         return {
           ...item,
           label: item[labelkeyname],
           value: item[valuekeyname]
         }
-      })
+      }).concat(selectOptions)
       if(autoget){
         // 主动更新情况 设置值为第一项
         this.value = this.selectOptions[0].value
@@ -102,6 +121,21 @@ export default {
     },
     reset () {
       this.value = undefined
+    },
+    /** *******************************
+     ** Fn: handleScroll
+     ** Intro: 处理滚动行为
+     ** @params: direction 为true代表向下滚动,为false代表向上滚动
+     *********************************/
+    handleScroll(direction) {
+      if (direction) {
+        // 请求下一页的数据
+        const {pages} = this
+        this.pageNum = ++this.pageNum
+        if(this.pageNum > pages) return
+        this.updateFlg = true
+        this.getRemoteData()
+      }
     }
   }
 }

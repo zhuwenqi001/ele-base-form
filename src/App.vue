@@ -121,8 +121,8 @@ export default {
           remoteParams: { clusterType: 'kafka' },
           labelkeyname: 'name',
           valuekeyname: 'name',
-          staticFilter: { applicant: '王强' },
-          autoget: true
+          staticFilter: { applicant: '王强' }
+          // autoget: true
         }, {
           itemType: 'select',
           label: '人员',
@@ -138,6 +138,18 @@ export default {
           relativeProp: [{ prop: 'remoteselect', paramkey: 'clusterName' }, { prop: 'user', filterkey: 'applicant' }],
           labelkeyname: 'name',
           valuekeyname: 'name'
+        }, {
+          itemType: 'remoteselect',
+          label: '分页型',
+          prop: 'pagination',
+          hostName: 'http://10.9.15.244:8080',
+          apiUrl: '/exp/list',
+          method: 'POST',
+          remoteParams: { appId: 7, status: ['NOT_START', 'RUNNING', 'STOPPED'], pageSize: 10 },
+          resultPath: ['result', 'list'],
+          labelkeyname: 'expName',
+          valuekeyname: 'expId',
+          pagination: true
         }
         ]
       }
