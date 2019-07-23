@@ -1,4 +1,4 @@
-# el-base-form
+# ele-base-form
 
 >ele-base-form 是一个基于element-ui组件的vue插件。项目实现效果为以简约的、配置化方式表达form表单，提供常用的表单关联入口，支持远程校验等，旨在为存在大量表单的后台管理系统开发提供便利。
 
@@ -28,7 +28,7 @@ $ npm i --save ele-base-form
 #### attribute
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|
-| itemType | item 类型 | String | 'input', 'number', 'radio', 'checkbox', 'select', 'date', 'remoteselect', 'fuzzyinput', 'elautocomplete' | 'input' |
+| itemType | item 类型 | String | 'input', 'number', 'radio', 'checkbox', 'select', 'date', 'remoteselect', ~~'fuzzyinput'~~, ~~'elautocomplete'~~ | 'input' |
 | label | item描述 | String | - | - |
 | labelWidth | label 宽度 | String | - | - |
 | prop | item key,必填，数组数据以它为key | String | - | - |
@@ -39,7 +39,7 @@ $ npm i --save ele-base-form
 | defaultValue | item 默认值 | String, Array, Number | - | - |
 | current | - | - | - | - |
 | inputType | itemType:'input' 时延伸类型 | String | 'text', 'textarea', 'email', 'password' | 'text' |
-| slots | itemType:'input' 时支持append、prepend插入 | Array | [{type:'append',text:''},{type:'prepend',text:''}] | - |
+| slots | itemType:'input/number' 时支持append、prepend插入 | Array | [{type:'append',text:''},{type:'prepend',text:''}] | - |
 | rows | itemType:'input',inputType:'textarea' 行数 | Number | - | - |
 | min | itemType:'number' 最小值 | Number | - | - |
 | max | itemType:'number' 最大值 | Number | - | 2147483647 |
@@ -56,13 +56,18 @@ $ npm i --save ele-base-form
 | apiUrl | 请求API路径 | String | - | - |
 | method | 请求类型 | String | 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' | 'GET' | 
 | resultPath | 数据解析路径 | Array | - | ['result'] | 
-| labelkeyname | 数据展示label选择项 | String | - | 'label' | 
+| pagination | - 下拉分页 | - | - |
+| labelkeyname | 数据展示label选择项 | String | - | 'label' |
 | valuekeyname | 数据展示value选择项 | String | - | 'value' |
 | disablekeyname | 数据展示禁用key | String | - | - |
 | disableflg | 数据禁用flg | Boolean | - | - |
 | staticOptions | - | - | - |
 | remoteParams | 请求静态参数 | Object | - | - |
 | relativeProp | 表单关联信息，1.被关联项修改值 重置关联项 2.值作为请求的参数 | Array | - | - |
+| staticFilter | - 静态筛选参数 | Object | - | {} |
+| relativeFilter | - 关联筛选 | Array | - | - |
 | autoget | - | - | - |
 | change | 选中回调 | - | - | - |
+
+
 

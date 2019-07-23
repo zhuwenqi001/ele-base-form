@@ -45,6 +45,9 @@ export default {
           itemType: 'number',
           label: '数字输入框',
           prop: 'number',
+          step: 2,
+          min: 2,
+          max: 20,
           slots: [{ type: 'append', text: 'm/s' }],
           rules: [{ required: true, message: '请输入值', trigger: 'blur' }]
         }, {
