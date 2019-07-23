@@ -27,6 +27,7 @@ $ npm i --save ele-base-form
 #### Methods
 
 | 事件名称 | 说明 | 回调参数 |
+| --- |------|:----:|-----|
 | handleFormValidate | 根据rules验证form表单，访问方式为 this.$refs[refname].handleFormValidate | Function 接收valid,value两个参数 |
 | reset | 重置表单数据 | - |
 | clear | 清空表单数据 | - |
