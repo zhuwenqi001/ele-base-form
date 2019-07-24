@@ -23,7 +23,7 @@ import { formGroupProps } from './props'
 import FormItem from './form-item'
 
 export default {
-  name: 'eleBaseForm',
+  name: 'EleBaseForm',
   components: {
     FormItem
   },
@@ -51,7 +51,7 @@ export default {
         } else {
           itemCurval = currentFormValue[prop]
         }
-        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname,hostName }, form, { disabled })
+        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname, hostName }, form, { disabled })
         return _form
       })
     }
@@ -90,7 +90,7 @@ export default {
             Object.assign(_params, _setParams(propItem))
           })
         } else {
-          // 已存在的params项 优先级高于currentValue
+          // 已存在的params项 优先级高于currentFormValue
           // 解决改变forms 原params丢失
           Object.assign(_params, _setParams(prop))
         }
@@ -109,7 +109,7 @@ export default {
     },
     // 表单提交验证
     handleFormValidate (callback, e) {
-      const { getParams,formrefname } = this
+      const { getParams, formrefname } = this
       this.$refs[formrefname].validate(valid => {
         callback && typeof callback === 'function' && callback(valid, getParams(), e)
       })
@@ -124,7 +124,7 @@ export default {
       })
     },
     // 表单清空
-    clear(){
+    clear () {
       this.reset('clear')
     }
   }

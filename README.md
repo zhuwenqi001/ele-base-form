@@ -1,11 +1,81 @@
 # ele-base-form
 
->ele-base-form 是一个基于element-ui组件的vue插件。项目实现效果为以简约的、配置化方式表达form表单，提供常用的表单关联入口，支持远程校验等，旨在为存在大量表单的后台管理系统开发提供便利。
+>ele-base-form 是一个基于element-ui组件的vue插件。项目实现效果为以简约的、配置化方式表达form表单，提供常用的表单关联入口，支持远程校验等。旨在为存在大量表单的后台管理系统开发提供便利。
 
 ## 快速使用
+### install
 ```
-$ npm i --save ele-base-form
+npm i --save ele-base-form
 ```
+### 引入 main.js
+```
+import eleBaseForm from 'ele-base-form'
+Vue.use(EleBaseForm)
+```
+### views 中使用
+变更操作主要是对formOpt的可修改，修改需要符合vue的数据更新监听机制。
+```
+<template>
+  <ele-base-form v-bind="formOpt" />
+</template>
+<script>
+  export default{
+    data(){
+      return {
+        formOpt: {
+          inline: false,
+          ref: 'testform',
+          formrefname: 'testform',
+          forms:[
+            {
+              label: '基本输入框',
+              prop: 'inputTest',
+              slots: [{ type: 'prepend', text: 'HTTP://' }],
+              defaultValue: 'www.github.com'
+            }, {
+              itemType: 'select',
+              label: '本地下拉框',
+              prop: 'select',
+              options: [{ label: '数值', value: 'number' }, { label: '字符串', value: 'string' }],
+              change: this.selectchange
+            }, {
+              itemType: 'remoteselect',
+              label: '远程下拉-静态参数',
+              prop: 'staticParamsRemoteSelect',
+              hostName:'http://www.xxxx.com',
+              apiUrl: '/api/consumer/queryApprovedConsumers',
+              method: 'GET',
+              remoteParams: { clusterType: 'kafka' },
+              labelkeyname: 'name',
+              valuekeyname: 'name',
+              staticFilter: { applicant: '王强' }
+              autoget: true
+            }
+          ]
+        }
+      }
+    },
+    methods:{
+      selectchange(val, formrefname){
+        console.log(val,formrefname)
+      }
+    }
+  }
+</script>
+```
+
+## 常用场景
+- 对表格数据的编辑操作，将rows Object 赋值给currentFormValue。（注意rows Object key值需要与forms中的prop值对应）
+- 动态生成多个表单时，为表单配置使用formrefname参数。在涉及到表单内部(下拉框)关联操作时，可以由change回调返回formrefname，通过this.$refs[formrefname]找到操作项。（ref属性和formrefname需要值一致，配置上存在不合适，后续逐渐修改中）
+- form item关联（B依赖A）（目前集中在下拉，后面持续完善）。
+    - 使用配置关联的效果
+      - A修改，B值重置为空 （必然）
+      - A修改，值作为B的依据 （配置）
+        - A值作为B的请求参数
+        - A值作为B的本地筛选参数
+    - 复杂关联的操作入口  
+      - change方法，作为操作forms数组的入口
+- 支持下拉框远程请求、下拉分页、输入框远程校验等
 
 ## API
 ### 表单整体
@@ -17,7 +87,7 @@ $ npm i --save ele-base-form
 | inline | 表单排列形式 | Boolean | - | false |
 | size | 表单size | String | medium / small / mini | small |
 | disabled | 表单整体禁用,优先级高于item disabled | Boolean | - | false |
-| labelWidth | 表单统一label宽度 | String | - | '150px' |
+| labelWidth | 表单统一label宽度 | String | - | '150px' |v
 | currentFormValue | 表单当前值。常用于编辑状态-表单赋值。其中对象key值和表单prop对应 | Object | - | {} |
 | hostName | 表单中请求通用域名 | String | - | - |
 | formrefname | 表单ref,常用场景：动态生成多个表单项，操作表单item时，item回调返回formrefname,以该参数作为找到当前表单的标志 | String | - | baseform |
