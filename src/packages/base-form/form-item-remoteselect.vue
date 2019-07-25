@@ -2,9 +2,9 @@
   <el-select
     v-model="value"
     v-loading="loading"
+    v-selectscroll="handleScroll"
     :disabled="disabled"
     :placeholder="placeholder"
-    v-selectscroll="handleScroll"
     @focus="getRemoteData"
   >
     <el-option
@@ -24,9 +24,9 @@ export default {
   name: 'Remoteselect',
   props: {
     ...formItemProps,
-    relativeFilter:{
-      type:Object,
-      default:()=>{
+    relativeFilter: {
+      type: Object,
+      default: () => {
         return {}
       }
     }
@@ -37,22 +37,27 @@ export default {
       selectOptions: [],
       // 是否更新 发起请求的标志
       updateFlg: true,
-      loading:false,
-      pageNum:1,
-      pages:0
+      loading: false,
+      pageNum: 1,
+      pages: 0
     }
   },
   computed: {
-    filterObj(){
-      const {staticFilter,relativeFilter} = this
-      return Object.assign(staticFilter,relativeFilter)
+    filterObj () {
+      const { staticFilter, relativeFilter } = this
+      return Object.assign(staticFilter, relativeFilter)
     },
     compoundSelectOptions () {
-      const { selectOptions, staticOptions,filterObj} = this
+      const { selectOptions, staticOptions, filterObj, relativeProp } = this
       let _compoundOptions = staticOptions.concat(selectOptions)
-      Object.keys(filterObj).forEach(item=>{
-        _compoundOptions = _compoundOptions.filter(opt=>opt[item] === filterObj[item])
-      })
+      if (relativeProp && relativeProp.length) {
+        Object.keys(filterObj).forEach(item => {
+          debugger
+          if (relativeProp[relativeProp.map(vv => vv.filterkey).indexOf(item)].require || filterObj[item] !== undefined) {
+            _compoundOptions = _compoundOptions.filter(opt => opt[item] === filterObj[item])
+          }
+        })
+      }
       return _compoundOptions
     }
   },
@@ -69,31 +74,43 @@ export default {
       // 关联参数值发生改变 触发请求
       this.updateFlg = true
     },
-    relativeFilter(){
+    relativeFilter () {
       this.value = undefined
     }
   },
-  created() {
+  created () {
     this.autoget && this.getRemoteData()
   },
   methods: {
     async getRemoteData () {
-      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, autoget, pagination, pageNum, selectOptions,pageNumKey,pagePath } = this
+      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, autoget, pagination, pageNum, selectOptions, pageNumKey, pagePath, relativeProp } = this
 
       if (!updateFlg) return
 
-      const _params = Object.assign({},remoteParams)
-      if(pagination){
-        Object.assign(_params,{[pageNumKey]:pageNum})
+      if (relativeProp && relativeProp.length) {
+        // 强关联项值为undefined 或者空 不请求
+        const strongRealtiveBool = relativeProp.every(item => {
+          const { require, paramkey } = item
+          if (require) {
+            return !(remoteParams[paramkey] === undefined || remoteParams[paramkey] === '')
+          }
+          return true
+        })
+        if (!strongRealtiveBool) return
+      }
+
+      const _params = Object.assign({}, remoteParams)
+      if (pagination) {
+        Object.assign(_params, { [pageNumKey]: pageNum })
       }
 
       this.loading = true
       const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
       this.loading = false
 
-      if(pagination){
+      if (pagination) {
         let pages = res
-        pagePath.forEach(item=>{
+        pagePath.forEach(item => {
           pages = pages[item]
         })
         this.pages = pages
@@ -105,7 +122,7 @@ export default {
       resultPath.forEach(item => {
         result = result[item]
       })
-      if(!result) return
+      if (!result) return
       this.selectOptions = result.map(item => {
         return {
           ...item,
@@ -113,7 +130,7 @@ export default {
           value: item[valuekeyname]
         }
       }).concat(selectOptions)
-      if(autoget){
+      if (autoget) {
         // 主动更新情况 设置值为第一项
         this.value = this.selectOptions[0].value
       }
@@ -127,12 +144,12 @@ export default {
      ** Intro: 处理滚动行为
      ** @params: direction 为true代表向下滚动,为false代表向上滚动
      *********************************/
-    handleScroll(direction) {
+    handleScroll (direction) {
       if (direction) {
         // 请求下一页的数据
-        const {pages} = this
+        const { pages } = this
         this.pageNum = ++this.pageNum
-        if(this.pageNum > pages) return
+        if (this.pageNum > pages) return
         this.updateFlg = true
         this.getRemoteData()
       }

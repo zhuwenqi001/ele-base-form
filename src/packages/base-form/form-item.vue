@@ -2,12 +2,13 @@
   <el-form-item
     :label="label"
     :prop="realprop"
-    :rules="rules"
+    :rules="realRules"
   >
     <!-- 普通输入框 -->
     <el-input
       v-if="itemType==='input'"
       v-model="value"
+      v-loading="loading"
       :disabled="disabled"
       :placeholder="handleArrItem(placeholder,'请输入内容')"
       :type="inputType"
@@ -122,6 +123,7 @@
       :api-url="apiUrl"
       :method="method"
       :remote-params="privateRemoteParams"
+      :relative-prop="relativeProp"
       :parent="parent"
       :disableflg="disableflg"
       :disablekeyname="disablekeyname"
@@ -142,6 +144,8 @@
 <script>
 import { formItemProps } from './props'
 import remoteSelect from './form-item-remoteselect'
+import httpService from '../../utils/httpService'
+import { util } from '../../utils/common'
 
 export default {
   name: 'FormItem',
@@ -154,7 +158,8 @@ export default {
     return {
       value: undefined,
       privateRemoteParams: remoteParams,
-      relativeFilter:{}
+      relativeFilter: {},
+      loading: false
     }
   },
   computed: {
@@ -170,6 +175,9 @@ export default {
         return prop[0]
       }
       return prop
+    },
+    realRules () {
+      return this.generateRules()
     }
   },
   watch: {
@@ -186,12 +194,13 @@ export default {
       this.$emit('recieveFormItemValue', obj)
     },
     parent (newval, oldval) {
-      const { relativeProp, relativeChange } = this
-      const bool = (key)=>{
-        return relativeProp.some(item=>{
+      const { relativeProp, relativeChange, remoteParamsChange } = this
+      const bool = (key) => {
+        return relativeProp.some(item => {
           const { prop } = item
-          if(newval[prop] !== oldval[prop]){
-            if(key !== undefined){
+          if (newval[prop] !== oldval[prop]) {
+            if (key !== undefined) {
+              // relativeProp中paramkey 存在值
               return item[key] !== undefined
             }
             return true
@@ -206,7 +215,6 @@ export default {
         monitorChange && relativeChange()
         const monitorRemoteParams = bool('paramkey')
         monitorRemoteParams && remoteParamsChange()
-
       }
     }
   },
@@ -216,10 +224,10 @@ export default {
   methods: {
     // slot类型区分
     filterSlot (type) {
-      const {slots} = this
-      if(slots){
+      const { slots } = this
+      if (slots) {
         return slots.filter(item => item.type === type)
-      }else{
+      } else {
         return ''
       }
     },
@@ -247,14 +255,13 @@ export default {
       if (itemType === 'remoteselect') {
         this.$refs[`${prop}_remoteSelect`].reset()
       }
-      if(type === 'clear'){
+      if (type === 'clear') {
         this.value = undefined
         Array.isArray(prop) && (this.value = ['', ''])
         itemType === 'checkbox' && (this.value = [])
-      }else{
+      } else {
         this.initVal()
       }
-      
     },
     // 接收remoteSelect 值
     recieveRemoteSelectValue (obj) {
@@ -265,29 +272,29 @@ export default {
       const { itemType, parent, relativeProp } = this
       // 重置当前项的值
       this.value = undefined
-      if(itemType !== 'remoteselect') return
+      if (itemType !== 'remoteselect') return
 
       const _relativeFilter = {}
       relativeProp.forEach(relative => {
-        const {prop,filterkey} = relative
+        const { prop, filterkey } = relative
         // 关联项值作为本地筛选的参数
-        filterkey !== undefined && Object.assign(_relativeFilter,{
-          [relative.filterkey]:parent[relative.prop]
+        filterkey !== undefined && Object.assign(_relativeFilter, {
+          [filterkey]: parent[prop]
         })
       })
       this.relativeFilter = _relativeFilter
     },
-    remoteParamsChange(){
-      const {remoteParams,relativeProp,itemType} = this
-      if(itemType !== 'remoteselect') return
+    remoteParamsChange () {
+      const { remoteParams, relativeProp, itemType, parent } = this
+      if (itemType !== 'remoteselect') return
 
-      const _privateRemoteParams = {...remoteParams}
-      relativeProp.forEach(relative=>{
-        const {prop,paramkey} = relative
-          // 作为请求的参数
-          paramkey !== undefined && Object.assign(_privateRemoteParams,{
-            [relative.paramkey]: parent[relative.prop]
-          })
+      const _privateRemoteParams = { ...remoteParams }
+      relativeProp.forEach(relative => {
+        const { prop, paramkey } = relative
+        // 作为请求的参数
+        paramkey !== undefined && Object.assign(_privateRemoteParams, {
+          [paramkey]: parent[prop]
+        })
       })
       this.privateRemoteParams = _privateRemoteParams
     },
@@ -297,6 +304,43 @@ export default {
       if (change) {
         change(value, formrefname)
       }
+    },
+    // 唯一性验证方法
+    validateUniqueCode ({ hostName, apiUrl, method, message, paramkey, statusPath, messagePath }) {
+      const that = this
+      return async function (rule, value, callback, sourse) {
+        const params = {}
+        paramkey !== undefined ? Object.assign(params, { [paramkey]: value }) : Object.assign(params, sourse)
+
+        that.loading = true
+        const res = await httpService.accessAPI({ hostName, apiUrl, method, params })
+        that.loading = false
+
+        let status = res
+        let _message = message
+        statusPath.forEach(item => {
+          status = status[item]
+        })
+        if (messagePath) {
+          _message = res
+          messagePath.forEach(item => {
+            _message = _message[item]
+          })
+        }
+        status ? callback() : callback(new Error(_message))
+      }
+    },
+    // 生成唯一性验证 rules
+    generateRules () {
+      const { rules, checkApi, validateUniqueCode } = this
+      const realRules = util.deepCopy(rules)
+      if (checkApi) {
+        const { trigger } = checkApi
+        realRules.push({
+          validator: validateUniqueCode(checkApi), trigger
+        })
+      }
+      return realRules
     }
   }
 }

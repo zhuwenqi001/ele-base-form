@@ -141,7 +141,7 @@ export default {
           apiUrl: '/api/consumer/queryApprovedConsumers',
           method: 'GET',
           remoteParams: { clusterType: 'kafka' },
-          relativeProp: [{ prop: 'remoteselect', paramkey: 'clusterName' }, { prop: 'user', filterkey: 'applicant' }],
+          relativeProp: [{ prop: 'remoteselect', paramkey: 'clusterName', require: true }, { prop: 'user', filterkey: 'applicant' }],
           labelkeyname: 'name',
           valuekeyname: 'name'
         }, {
@@ -156,6 +156,22 @@ export default {
           labelkeyname: 'expName',
           valuekeyname: 'expId',
           pagination: true
+        }, {
+          label: '唯一性校验',
+          prop: 'appName',
+          checkApi: {
+            hostName: 'http://10.9.15.244:8080',
+            apiUrl: '/app/unique',
+            method: 'POST',
+            paramkey: 'appName',
+            message: '已存在或者以前使用过，请更换',
+            statusPath: ['status'],
+            messagePath: ['message'],
+            trigger: 'blur'
+          },
+          rules: [{
+            required: true, message: '请输入值', trigger: 'blur'
+          }]
         }
         ]
       }

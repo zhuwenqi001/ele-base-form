@@ -66,9 +66,10 @@ Vue.use(EleBaseForm)
 
 ## 常用场景
 - 对表格数据的编辑操作，将rows Object 赋值给currentFormValue。（注意rows Object key值需要与forms中的prop值对应）
-- 动态生成多个表单时，为表单配置使用formrefname参数。在涉及到表单内部(下拉框)关联操作时，可以由change回调返回formrefname，通过this.$refs[formrefname]找到操作项。（ref属性和formrefname需要值一致，配置上存在不合适，后续逐渐修改中）
+- 动态生成多个表单时，为表单配置使用formrefname参数。在涉及到表单内部(下拉框)关联操作时，可以由change回调返回formrefname，通过this.$refs[formrefname]找到操作项。（ref属性和formrefname需要值一致）
 - form item关联（B依赖A）（目前集中在下拉，后面持续完善）。
     - 使用配置关联的效果
+      - A无值，B（remoteselect）不发起请求 (强关联，relativeProp中配置require:true)
       - A修改，B值重置为空 （必然）
       - A修改，值作为B的依据 （配置）
         - A值作为B的请求参数
@@ -143,10 +144,11 @@ Vue.use(EleBaseForm)
 | disableflg | 数据禁用flg | Boolean,String | - | - |
 | staticOptions | 远程下拉框数据中添加的静态数据 | Array | - | - |
 | remoteParams | 请求静态参数 | Object | - | - |
-| relativeProp | 表单关联信息，1.被关联项修改值 重置关联项 2.paramkey作为请求的参数.3.filterkey作为静态筛选的参数[{prop:'',paramkey:'',filterkey:''] | Array | - | - |
+| relativeProp | 表单关联信息，1.被关联项修改值 重置关联项 2.paramkey作为请求的参数.3.filterkey作为静态筛选的参数[{prop:'',paramkey:'',filterkey:'',require:true/false]，require表示是否强关联(强关联项无值时，不请求) | Array | - | - |
 | staticFilter | 下拉框静态筛选参数 | Object | - | {} |
 | autoget | 自动请求下拉列表数据 | Boolean | - | false |
 | change | 选中回调 | Function | - | - |
+
 
 
 

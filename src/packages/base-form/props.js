@@ -83,7 +83,12 @@ export const formItemProps = {
     type: Boolean,
     default: false
   },
-  rules: Array,
+  rules: {
+    type: Array,
+    default: () => {
+      return []
+    }
+  },
   placeholder: String,
   defaultValue: [String, Array, Number],
   current: [String, Array, Object, Number],
@@ -226,6 +231,7 @@ export const formItemProps = {
     default: () => {
       return ['result', 'pages']
     }
-  }
-
+  },
+  // 唯一性验证
+  checkApi: Object
 }
