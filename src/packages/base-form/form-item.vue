@@ -3,6 +3,7 @@
     :label="label"
     :prop="realprop"
     :rules="realRules"
+    :label-width="labelWidth"
   >
     <!-- 普通输入框 -->
     <el-input
