@@ -1,5 +1,5 @@
 
-import eleBaseForm from './packages/base-form/index.js'
+import eleBaseForm from './packages/base-form/form.vue'
 
 import selectScroll from './directives/selectScroll'
 const components = [

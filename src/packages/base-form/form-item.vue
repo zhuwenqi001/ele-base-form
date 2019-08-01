@@ -199,14 +199,7 @@ export default {
       const bool = (key) => {
         return relativeProp.some(item => {
           const { prop } = item
-          if (newval[prop] !== oldval[prop]) {
-            if (key !== undefined) {
-              // relativeProp中paramkey 存在值
-              return item[key] !== undefined
-            }
-            return true
-          }
-          return false
+          return (newval[prop] !== oldval[prop]) && (key === undefined || item[key] !== undefined)
         })
       }
       // 监听forms params 变化，将兄弟formitem 关联起来
