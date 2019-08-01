@@ -52,7 +52,6 @@ export default {
       let _compoundOptions = staticOptions.concat(selectOptions)
       if (relativeProp && relativeProp.length) {
         Object.keys(filterObj).forEach(item => {
-          debugger
           if (relativeProp[relativeProp.map(vv => vv.filterkey).indexOf(item)].require || filterObj[item] !== undefined) {
             _compoundOptions = _compoundOptions.filter(opt => opt[item] === filterObj[item])
           }
