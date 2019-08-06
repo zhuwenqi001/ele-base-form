@@ -210,6 +210,9 @@ export default {
         const monitorRemoteParams = bool('paramkey')
         monitorRemoteParams && remoteParamsChange()
       }
+    },
+    itemCur (newval) {
+      this.value = newval
     }
   },
   created () {
