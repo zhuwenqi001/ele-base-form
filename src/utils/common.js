@@ -28,5 +28,30 @@ export const util = {
     })
 
     return copy
+  },
+  // 格式化option item 数据
+  fmtOptionData (item, labelkeyname, valuekeyname) {
+    return typeof item === 'object' ? {
+      ...item,
+      label: item[labelkeyname],
+      value: item[valuekeyname]
+    } : {
+      label: item,
+      value: item
+    }
+  },
+  // 筛选options数据
+  filterOptions (options, labelkeyname, valuekeyname, filterVals) {
+    const filterValsKeys = Object.keys(filterVals)
+    const res = []
+    options.forEach(item => {
+      // 存在过滤条件 || 满足filterVals所有条件
+      if (!filterValsKeys || filterValsKeys.every(key => item[key] === filterVals[key])) {
+        // format
+        res.push(this.fmtOptionData(item, labelkeyname, valuekeyname))
+      }
+    })
+    return res
   }
+
 }

@@ -2,16 +2,16 @@
   <el-form-item
     :label="label"
     :prop="realprop"
-    :rules="realRules"
+    :rules="fmtRules"
     :label-width="labelWidth"
   >
     <!-- 普通输入框 -->
     <el-input
       v-if="itemType==='input'"
-      v-model="value"
+      v-model="itemValue"
       v-loading="loading"
       :disabled="disabled"
-      :placeholder="handleArrItem(placeholder,'请输入内容')"
+      :placeholder="fmtPlaceholder"
       :type="inputType"
       :rows="rows"
     >
@@ -34,7 +34,7 @@
         >{{ _slot.text }}</span>
       </template>
       <el-input-number
-        v-model="value"
+        v-model="itemValue"
         :disabled="disabled"
         :min="min"
         :max="max"
@@ -52,58 +52,58 @@
     <!-- 单选 -->
     <el-radio-group
       v-else-if="itemType==='radio'"
-      v-model="value"
+      v-model="itemValue"
       :disabled="disabled"
       @change="handleChange"
     >
       <el-radio
-        v-for="(option,i) in options"
-        :key="i+'_'+handleArrItem(option.value,option)"
-        :label="handleArrItem(option.value, option)"
-        :disabled="option.disabled"
+        v-for="({label,value,disabled},i) in fmtOption"
+        :key="`${i}_${value}`"
+        :label="value"
+        :disabled="disabled"
       >
-        {{ handleArrItem(option.label,option) }}
+        {{ label }}
       </el-radio>
     </el-radio-group>
 
     <!-- 多选 -->
     <el-checkbox-group
       v-else-if="itemType === 'checkbox'"
-      v-model="value"
+      v-model="itemValue"
       :disabled="disabled"
       @change="handleChange"
     >
       <el-checkbox
-        v-for="(option,i) in options"
-        :key="i+'_'+handleArrItem(option.value,option)"
-        :label="handleArrItem(option.value,option)"
-        :disabled="option.disabled"
+        v-for="({label,value,disabled},i) in fmtOption"
+        :key="`${i}_${value}`"
+        :label="value"
+        :disabled="disabled"
       >
-        {{ handleArrItem(option.label,option) }}
+        {{ label }}
       </el-checkbox>
     </el-checkbox-group>
 
     <!-- 本地下拉框 -->
     <el-select
       v-else-if="itemType==='select'"
-      v-model="value"
+      v-model="itemValue"
       :disabled="disabled"
-      :placeholder="handleArrItem(placeholder,'请选择')"
+      :placeholder="fmtPlaceholder"
       :filterable="filterable"
       @change="handleChange"
     >
       <el-option
-        v-for="(option,i) in options"
-        :key="i+'_'+handleArrItem(option.value,option)"
-        :label="handleArrItem(option.label,option)"
-        :value="handleArrItem(option.value,option)"
+        v-for="({label,value,disabled},i) in fmtOption"
+        :key="`${i}_${value}`"
+        :label="label"
+        :value="value"
       />
     </el-select>
 
     <!-- 日期选择框 -->
     <el-date-picker
       v-else-if="itemType==='date'"
-      v-model="value"
+      v-model="itemValue"
       :disabled="disabled"
       :format="format"
       :value-format="valueFormat"
@@ -118,7 +118,7 @@
       v-else-if="itemType === 'remoteselect'"
       :ref="prop + '_remoteSelect'"
       :disabled="disabled"
-      :placeholder="handleArrItem(placeholder,'请选择')"
+      :placeholder="fmtPlaceholder"
       :prop="prop"
       :host-name="hostName"
       :api-url="apiUrl"
@@ -155,12 +155,20 @@ export default {
   },
   props: formItemProps,
   data () {
-    const { remoteParams } = this
+    const { relativeProp } = this
+    // 拆分请求参数 筛选参数
+    const paramProp = []
+    const filterProp = []
+    relativeProp.forEach(prop => {
+      const { paramkey, filterkey } = prop
+      paramkey !== undefined && paramProp.push(prop)
+      filterkey !== undefined && filterProp.push(prop)
+    })
     return {
-      value: undefined,
-      privateRemoteParams: remoteParams,
-      relativeFilter: {},
-      loading: false
+      itemValue: undefined,
+      loading: false,
+      paramProp,
+      filterProp
     }
   },
   computed: {
@@ -177,12 +185,36 @@ export default {
       }
       return prop
     },
-    realRules () {
-      return this.generateRules()
+    fmtPlaceholder () {
+      const { placeholder, itemType } = this
+      return placeholder === undefined ? itemType === 'input' ? '请输入' : '请选择' : placeholder
+    },
+    fmtRules () {
+      const { rules, checkApi, checkApi: { trigger } = {}, validateUniqueCode } = this
+      const _fmtRules = util.deepCopy(rules)
+      checkApi && _fmtRules.push({
+        validator: validateUniqueCode(checkApi), trigger
+      })
+      return _fmtRules
+    },
+    // 筛选条件
+    filterVals () {
+      const { filterProp, staticFilter, parent } = this
+      const _filterVals = { ...staticFilter }
+      filterProp.forEach(item => {
+        const { prop, filterkey, require } = item;
+        (parent[prop] !== undefined || require) && (_filterVals[filterkey] = parent[prop])
+      })
+      return _filterVals
+    },
+    fmtOption () {
+      const { options, labelkeyname, valuekeyname, filterVals } = this
+      // 筛选 && 格式化数组
+      return util.filterOptions(options, labelkeyname, valuekeyname, filterVals)
     }
   },
   watch: {
-    value (newval) {
+    itemValue (newval) {
       const { prop } = this
       const obj = {}
       if (Array.isArray(prop)) {
@@ -225,13 +257,6 @@ export default {
         return ''
       }
     },
-    // 数组数据处理
-    handleArrItem (val, alternate) {
-      if (val === undefined) {
-        return alternate
-      }
-      return val
-    },
     // 初始化value
     initVal () {
       const { defaultValue, itemCur, itemType } = this
@@ -241,7 +266,7 @@ export default {
         // checkbox 初始值不可以为undefined
         _value = []
       }
-      this.value = _value
+      this.itemValue = _value
     },
     // 重置val
     reset (type) {
@@ -250,9 +275,9 @@ export default {
         this.$refs[`${prop}_remoteSelect`].reset()
       }
       if (type === 'clear') {
-        this.value = undefined
-        Array.isArray(prop) && (this.value = ['', ''])
-        itemType === 'checkbox' && (this.value = [])
+        this.itemValue = undefined
+        Array.isArray(prop) && (this.itemValue = ['', ''])
+        itemType === 'checkbox' && (this.itemValue = [])
       } else {
         this.initVal()
       }
@@ -265,7 +290,7 @@ export default {
     relativeChange () {
       const { itemType, parent, relativeProp } = this
       // 重置当前项的值
-      this.value = undefined
+      this.itemValue = undefined
       if (itemType !== 'remoteselect') return
 
       const _relativeFilter = {}
@@ -323,18 +348,6 @@ export default {
         }
         status ? callback() : callback(new Error(_message))
       }
-    },
-    // 生成唯一性验证 rules
-    generateRules () {
-      const { rules, checkApi, validateUniqueCode } = this
-      const realRules = util.deepCopy(rules)
-      if (checkApi) {
-        const { trigger } = checkApi
-        realRules.push({
-          validator: validateUniqueCode(checkApi), trigger
-        })
-      }
-      return realRules
     }
   }
 }

@@ -208,7 +208,12 @@ export const formItemProps = {
     }
   },
   // 关联项信息 1.被关联项修改值 重置关联项 2.值作为请求的参数
-  relativeProp: Array,
+  relativeProp: {
+    type: Array,
+    default: () => {
+      return []
+    }
+  },
   // 载入即触发请求，并设置默认值
   autoget: {
     type: Boolean,
