@@ -4,6 +4,7 @@
     :prop="realprop"
     :rules="realRules"
     :label-width="labelWidth"
+    :class="(inline===false)?'specailBlock':''"
   >
     <!-- 普通输入框 -->
     <el-input
@@ -374,5 +375,8 @@ export default {
 .base-form .el-select,.base-form .el-input__inner{
   width:100%;
 }
-
+.base-form .specailBlock{
+    display: block;
+    width:100%;
+}
 </style>

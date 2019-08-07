@@ -79,6 +79,10 @@ export const formItemProps = {
     type: Boolean,
     default: true
   },
+  inline: {
+    type: [Boolean, undefined],
+    default: undefined
+  },
   disabled: {
     type: Boolean,
     default: false
