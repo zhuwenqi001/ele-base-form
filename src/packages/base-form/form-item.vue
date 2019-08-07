@@ -123,16 +123,16 @@
       :host-name="hostName"
       :api-url="apiUrl"
       :method="method"
-      :remote-params="privateRemoteParams"
-      :relative-prop="relativeProp"
+      :remote-params="remoteParams"
+      :filter-prop="filterProps"
+      :static-filter="staticFilter"
+      :param-prop="paramProps"
       :parent="parent"
       :disableflg="disableflg"
       :disablekeyname="disablekeyname"
       :labelkeyname="labelkeyname"
       :valuekeyname="valuekeyname"
       :static-options="staticOptions"
-      :static-filter="staticFilter"
-      :relative-filter="relativeFilter"
       :autoget="autoget"
       :result-path="resultPath"
       :pagination="pagination"
@@ -201,12 +201,12 @@ export default {
     filterVals () {
       const { filterProp, staticFilter, parent } = this
       const _filterVals = { ...staticFilter }
-      filterProp.forEach(item => {
-        const { prop, filterkey, require } = item;
+      filterProp.forEach(({ prop, filterkey, require } = {}) => {
         (parent[prop] !== undefined || require) && (_filterVals[filterkey] = parent[prop])
       })
       return _filterVals
     },
+    // 生成展示的选项
     fmtOption () {
       const { options, labelkeyname, valuekeyname, filterVals } = this
       // 筛选 && 格式化数组
@@ -214,6 +214,7 @@ export default {
     }
   },
   watch: {
+    // 值更新 通知form
     itemValue (newval) {
       const { prop } = this
       const obj = {}
@@ -226,96 +227,58 @@ export default {
       }
       this.$emit('recieveFormItemValue', obj)
     },
+    // 监听关联项值变化
     parent (newval, oldval) {
-      const { relativeProp, relativeChange, remoteParamsChange } = this
-      const bool = (key) => {
-        return relativeProp.some(item => {
-          const { prop } = item
-          return (newval[prop] !== oldval[prop]) && (key === undefined || item[key] !== undefined)
+      const { relativeProp, reset } = this
+      const bool = () => {
+        return relativeProp.some(({ prop } = {}) => {
+          return newval[prop] !== oldval[prop]
         })
       }
-      // 监听forms params 变化，将兄弟formitem 关联起来
-      // 被关联项改变，重置关联项的值
-      if (relativeProp && relativeProp.length) {
-        const monitorChange = bool()
-        monitorChange && relativeChange()
-        const monitorRemoteParams = bool('paramkey')
-        monitorRemoteParams && remoteParamsChange()
-      }
+      // 监听到变化 重置值
+      bool() && reset()
+    },
+    itemCur () {
+      this.reset()
     }
   },
   created () {
     this.initVal()
   },
   methods: {
-    // slot类型区分
+    // number slot类型区分
     filterSlot (type) {
       const { slots } = this
-      if (slots) {
-        return slots.filter(item => item.type === type)
-      } else {
-        return ''
-      }
+      let _slotContent = ''
+      slots && (_slotContent = slots.filter(item => item.type === type))
+      return _slotContent
     },
     // 初始化value
     initVal () {
       const { defaultValue, itemCur, itemType } = this
-      let _value
-      itemCur === undefined ? (_value = defaultValue) : (_value = itemCur)
+      let _value = defaultValue
+      itemCur !== undefined && (_value = itemCur)
       if (itemType === 'checkbox' && _value === undefined) {
         // checkbox 初始值不可以为undefined
         _value = []
       }
       this.itemValue = _value
     },
-    // 重置val
+    // 重置
+    // @param type 清空/重置为初始值
     reset (type) {
-      const { itemType, prop } = this
-      if (itemType === 'remoteselect') {
-        this.$refs[`${prop}_remoteSelect`].reset()
-      }
+      const { initVal, itemType, prop } = this
       if (type === 'clear') {
         this.itemValue = undefined
-        Array.isArray(prop) && (this.itemValue = ['', ''])
         itemType === 'checkbox' && (this.itemValue = [])
+        itemType === 'remoteselect' && this.$refs[`${prop}_remoteSelect`].reset()
       } else {
-        this.initVal()
+        initVal()
       }
     },
     // 接收remoteSelect 值
     recieveRemoteSelectValue (obj) {
       this.$emit('recieveFormItemValue', obj)
-    },
-    // 被关联项改变
-    relativeChange () {
-      const { itemType, parent, relativeProp } = this
-      // 重置当前项的值
-      this.itemValue = undefined
-      if (itemType !== 'remoteselect') return
-
-      const _relativeFilter = {}
-      relativeProp.forEach(relative => {
-        const { prop, filterkey } = relative
-        // 关联项值作为本地筛选的参数
-        filterkey !== undefined && Object.assign(_relativeFilter, {
-          [filterkey]: parent[prop]
-        })
-      })
-      this.relativeFilter = _relativeFilter
-    },
-    remoteParamsChange () {
-      const { remoteParams, relativeProp, itemType, parent } = this
-      if (itemType !== 'remoteselect') return
-
-      const _privateRemoteParams = { ...remoteParams }
-      relativeProp.forEach(relative => {
-        const { prop, paramkey } = relative
-        // 作为请求的参数
-        paramkey !== undefined && Object.assign(_privateRemoteParams, {
-          [paramkey]: parent[prop]
-        })
-      })
-      this.privateRemoteParams = _privateRemoteParams
     },
     // change emit
     handleChange (value) {
