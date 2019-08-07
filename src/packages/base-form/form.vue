@@ -5,6 +5,7 @@
     :size="size"
     :label-width="labelWidth"
     :model="params"
+    class="base-form"
   >
     <template v-for="item in showForms">
       <form-item
