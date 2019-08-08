@@ -91,6 +91,7 @@
       :disabled="disabled"
       :placeholder="handleArrItem(placeholder,'请选择')"
       :filterable="filterable"
+      :multiple="multiple"
       @change="handleChange"
     >
       <el-option

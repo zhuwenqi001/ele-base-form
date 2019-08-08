@@ -191,6 +191,8 @@ export const formItemProps = {
   },
   disablekeyname: String,
   disableflg: [Boolean, String, Number],
+  // 下拉框多选
+  multiple: Boolean,
   // 静态拼接数据
   staticOptions: {
     type: Array,
