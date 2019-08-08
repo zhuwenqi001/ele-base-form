@@ -53,7 +53,8 @@ export default {
         } else {
           itemCurval = currentFormValue[prop]
         }
-        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname, hostName }, form, { disabled })
+        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname, hostName, disabled: form.disabled }, form)
+        disabled && (_form.disabled = true)
         return _form
       })
     }

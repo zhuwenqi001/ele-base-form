@@ -47,6 +47,7 @@ export default {
             label: '基本输入框',
             prop: 'inputTest',
             slots: [{ type: 'prepend', text: 'HTTP://' }],
+            disabled: true,
             defaultValue: 'text'
           }, {
             label: '文本框',
