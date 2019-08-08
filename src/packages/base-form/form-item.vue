@@ -101,7 +101,17 @@
         :value="handleArrItem(option.value,option)"
       />
     </el-select>
-
+    <el-slider
+      v-else-if="itemType === 'slider'"
+      v-model="value"
+      :disabled="disabled"
+      :max="max"
+      :min="min"
+      :step="step"
+      :show-input="showInput"
+      :marks="marks"
+      @change="handleChange"
+    />
     <!-- 日期选择框 -->
     <el-date-picker
       v-else-if="itemType==='date'"

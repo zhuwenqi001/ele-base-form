@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       formOpt: {
-        inline: true,
+        inline: false,
         ref: 'testform',
         formrefname: 'testform',
         hostName: 'http://10.9.35.138:8080',
@@ -181,6 +181,16 @@ export default {
             rules: [{
               required: true, message: '请输入值', trigger: 'blur'
             }]
+          }, {
+            prop: 'slider',
+            itemType: 'slider',
+            max: 100,
+            step: 1,
+            showInput: true,
+            marks: {
+              0: '0%',
+              100: '100%'
+            }
           }
         ]
       }
