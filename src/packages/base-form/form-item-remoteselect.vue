@@ -19,73 +19,71 @@
 <script>
 import { formItemProps } from './props'
 import httpService from '../../utils/httpService'
+import { util } from '../../utils/common'
 
 export default {
   name: 'Remoteselect',
   props: {
     ...formItemProps,
-    relativeFilter: {
-      type: Object,
-      default: () => {
-        return {}
-      }
+    paramsProps: {
+      type: Array,
+      default: () => ([])
+    },
+    filterProp: {
+      type: Array,
+      default: () => ([])
     }
   },
   data () {
     return {
       value: undefined,
       selectOptions: [],
-      // 是否更新 发起请求的标志
-      updateFlg: true,
+      requestParamsChangeFlg: false,
       loading: false,
       pageNum: 1,
       pages: 0
     }
   },
   computed: {
-    filterObj () {
-      const { staticFilter, relativeFilter } = this
-      return Object.assign(staticFilter, relativeFilter)
+    // 有效请求参数
+    fmtRequestParams () {
+      const { paramProp, remoteParams, parent } = this
+      return util.fmtParams({ props: paramProp, params: remoteParams, parent, keyname: 'paramkey' })
     },
-    compoundSelectOptions () {
-      const { selectOptions, staticOptions, filterObj, relativeProp } = this
-      let _compoundOptions = staticOptions.concat(selectOptions)
-      if (relativeProp && relativeProp.length) {
-        Object.keys(filterObj).forEach(item => {
-          if (relativeProp[relativeProp.map(vv => vv.filterkey).indexOf(item)].require || filterObj[item] !== undefined) {
-            _compoundOptions = _compoundOptions.filter(opt => opt[item] === filterObj[item])
-          }
-        })
-      }
-      return _compoundOptions
+    fmtFilterParams () {
+      const { filterProp, staticFilter, parent } = this
+      return util.fmtParams({ props: filterProp, params: staticFilter, parent, keyname: 'filterkey' })
+    },
+    fmtOptions () {
+      const { selectOptions, staticOptions, fmtFilterParams, labelkeyname, valuekeyname } = this
+      const options = staticOptions.concat(selectOptions)
+      return util.filterOptions(options, labelkeyname, valuekeyname, fmtFilterParams)
     }
   },
   watch: {
     value (newval) {
-      const { prop } = this
-      const obj = {}
-      obj[prop] = newval
-      this.$emit('recieveRemoteSelectValue', obj)
+      const { prop, parent } = this
+      parent[prop] !== newval && this.$emit('recieveRemoteSelectValue', { [prop]: newval })
     },
-    remoteParams () {
-      this.value = undefined
-      this.selectOptions = []
-      // 关联参数值发生改变 触发请求
-      this.updateFlg = true
-    },
-    relativeFilter () {
-      this.value = undefined
+    // 监听请求参数的变化
+    fmtRequestParams (newval, oldval) {
+      this.requestParamsChangeFlg = util.isObjectValueEqual(newval, oldval)
     }
   },
   created () {
     this.autoget && this.getRemoteData()
   },
   methods: {
+    isNeedRequest () {
+      // 请求参数中不存在undefined（必填项无有效值） || 参数值相比上次发生了变化
+      const { requestParamsChangeFlg, fmtRequestParams } = this
+      const keys = Object.keys(fmtRequestParams)
+      return requestParamsChangeFlg || keys.some(key => fmtRequestParams[key] === undefined)
+    },
     async getRemoteData () {
-      const { updateFlg, hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, autoget, pagination, pageNum, selectOptions, pageNumKey, pagePath, relativeProp } = this
+      if (!this.isNeedRequest()) return
 
-      if (!updateFlg) return
-
+      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, autoget, pagination, pageNum, selectOptions, pageNumKey, pagePath, relativeProp } = this
       if (relativeProp && relativeProp.length) {
         // 强关联项值为undefined 或者空 不请求
         const strongRealtiveBool = relativeProp.every(item => {

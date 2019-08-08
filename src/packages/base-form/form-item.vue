@@ -57,7 +57,7 @@
       @change="handleChange"
     >
       <el-radio
-        v-for="({label,value,disabled},i) in fmtOption"
+        v-for="({label,value,disabled},i) in fmtOptions"
         :key="`${i}_${value}`"
         :label="value"
         :disabled="disabled"
@@ -74,7 +74,7 @@
       @change="handleChange"
     >
       <el-checkbox
-        v-for="({label,value,disabled},i) in fmtOption"
+        v-for="({label,value,disabled},i) in fmtOptions"
         :key="`${i}_${value}`"
         :label="value"
         :disabled="disabled"
@@ -93,7 +93,7 @@
       @change="handleChange"
     >
       <el-option
-        v-for="({label,value,disabled},i) in fmtOption"
+        v-for="({label,value,disabled},i) in fmtOptions"
         :key="`${i}_${value}`"
         :label="label"
         :value="value"
@@ -124,9 +124,9 @@
       :api-url="apiUrl"
       :method="method"
       :remote-params="remoteParams"
-      :filter-prop="filterProps"
+      :param-prop="paramProp"
+      :filter-prop="filterProp"
       :static-filter="staticFilter"
-      :param-prop="paramProps"
       :parent="parent"
       :disableflg="disableflg"
       :disablekeyname="disablekeyname"
@@ -200,14 +200,10 @@ export default {
     // 筛选条件
     filterVals () {
       const { filterProp, staticFilter, parent } = this
-      const _filterVals = { ...staticFilter }
-      filterProp.forEach(({ prop, filterkey, require } = {}) => {
-        (parent[prop] !== undefined || require) && (_filterVals[filterkey] = parent[prop])
-      })
-      return _filterVals
+      return util.fmtParams({ props: filterProp, params: staticFilter, parent, keyname: 'filterkey' })
     },
     // 生成展示的选项
-    fmtOption () {
+    fmtOptions () {
       const { options, labelkeyname, valuekeyname, filterVals } = this
       // 筛选 && 格式化数组
       return util.filterOptions(options, labelkeyname, valuekeyname, filterVals)
