@@ -390,4 +390,7 @@ export default {
     display: block;
     width:100%;
 }
+.base-form .el-slider{
+  margin-left:10px;
+}
 </style>

@@ -5,6 +5,7 @@
     v-selectscroll="handleScroll"
     :disabled="disabled"
     :placeholder="placeholder"
+    :filterable="filterable"
     @focus="getRemoteData"
   >
     <el-option
