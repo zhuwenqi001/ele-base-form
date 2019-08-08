@@ -29,7 +29,13 @@ export const util = {
 
     return copy
   },
-  // 格式化option item 数据
+  /**
+   * 格式化option item 数据
+   * @param {*} item 项数据
+   * @param {String} labelkeyname label值的索引
+   * @param {String} valuekeyname value值的索引
+   * @returns {Object} fmt后的option 数据
+   */
   fmtOptionData (item, labelkeyname, valuekeyname) {
     return typeof item === 'object' ? {
       ...item,
@@ -40,15 +46,21 @@ export const util = {
       value: item
     }
   },
-  // 筛选options数据
+  /**
+   * 筛选并格式化options数据
+   * @param {Array} options 选项原始数据
+   * @param {String} labelkeyname label值的索引
+   * @param {*} valuekeyname value值的索引
+   * @param {*} filterVals 筛选参数
+   */
   filterOptions (options, labelkeyname, valuekeyname, filterVals) {
     const filterValsKeys = Object.keys(filterVals)
     // filterVals中存在undefined 说明有必填项无实际值，直接返回为空
-    if (!filterValsKeys && filterValsKeys.every(key => filterVals[key] === undefined)) return []
-    // 此时 filterVals 饱含了必填项，和所有有值的一般关联
+    if (filterValsKeys && filterValsKeys.every(key => filterVals[key] === undefined)) return []
+    // 此时 filterVals 可能包含了必填项，存在有效值的一般关联项
     const res = []
     options.forEach(item => {
-      // 存在过滤条件 || 满足filterVals所有条件
+      // 不存在过滤条件 || 满足filterVals所有条件
       if (!filterValsKeys || filterValsKeys.every(key => item[key] === filterVals[key])) {
         // format
         res.push(this.fmtOptionData(item, labelkeyname, valuekeyname))
@@ -56,14 +68,23 @@ export const util = {
     })
     return res
   },
-  // 参数生成
+  /**
+   * 参数生成（筛选参数、请求参数）
+   * @param {Array} props 需要解析的关联参数信息
+   * @param {Object} params 静态参数
+   * @param {Object} parent 表单数据
+   * @param {String} keyname 'filterkey/paramkey' 标识
+   * @returns {Object} 处理后的参数
+   */
   fmtParams ({ props, params, parent, keyname }) {
     const _params = { ...params }
     props.forEach(item => {
       const { prop, require } = item
+      // params 键值
       const key = item[keyname]
-      // 存入一般关联的有效值、强关联（key值必有，无效值为undefined）
+      // 存入一般关联的有效值 && 强关联（key值必有，无效值为undefined）
       if (((parent[prop] !== undefined && parent[prop] !== '') || require)) {
+        // 必填项为 ‘’ 设置只为undefined
         parent[prop] === '' ? (_params[key] = undefined) : (_params[key] = parent[prop])
       }
     })
@@ -86,6 +107,20 @@ export const util = {
     } else {
       return a === b
     }
+  },
+  // 路径生成
+  parsePath (data, path = [], defaultVal = undefined) {
+    if (path.length) return defaultVal
+    let res = data
+    try {
+      path.forEach(key => {
+        res = res[key]
+      })
+    } catch (e) {
+    // 没返回则返回默认值
+      res = defaultVal
+    }
+    return res
   }
 
 }

@@ -4,6 +4,7 @@
     :prop="realprop"
     :rules="fmtRules"
     :label-width="labelWidth"
+    :class="computedClass"
   >
     <!-- 普通输入框 -->
     <el-input
@@ -100,6 +101,18 @@
       />
     </el-select>
 
+    <el-slider
+      v-else-if="itemType === 'slider'"
+      v-model="value"
+      :disabled="disabled"
+      :max="max"
+      :min="min"
+      :step="step"
+      :show-input="showInput"
+      :marks="marks"
+      @change="handleChange"
+    />
+
     <!-- 日期选择框 -->
     <el-date-picker
       v-else-if="itemType==='date'"
@@ -172,6 +185,11 @@ export default {
     }
   },
   computed: {
+    computedClass () {
+      return {
+        specialBlock: (this.inline === false)
+      }
+    },
     prependSlot () {
       return this.filterSlot('prepend')
     },
@@ -342,6 +360,13 @@ export default {
 }
 .base-form .el-select,.base-form .el-input__inner{
   width:100%;
+}
+.base-form .specialBlock{
+    display: block;
+    width:100%;
+}
+.base-form .el-slider{
+  margin-left:10px;
 }
 
 </style>

@@ -5,6 +5,7 @@
     :size="size"
     :label-width="labelWidth"
     :model="params"
+    class="base-form"
   >
     <template v-for="item in showForms">
       <form-item
@@ -46,12 +47,13 @@ export default {
           // 时间范围 prop为数组
           itemCurval = []
           prop.forEach(propitem => {
-            itemCurval.push(currentFormValue[propitem])
+            itemCurval.push(currentFormValue[propitem] || '')
           })
         } else {
           itemCurval = currentFormValue[prop]
         }
-        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname, hostName }, form, { disabled })
+        const _form = Object.assign({}, { itemCur: itemCurval, labelWidth, formrefname, hostName }, form)
+        disabled && Object.assign(_form, { disabled: true })
         return _form
       })
     }
@@ -90,8 +92,7 @@ export default {
             Object.assign(_params, _setParams(propItem))
           })
         } else {
-          // 已存在的params项 优先级高于currentFormValue
-          // 解决改变forms 原params丢失
+          // 已存在的params项 优先级高于currentFormValue  解决改变forms 原params丢失
           Object.assign(_params, _setParams(prop))
         }
       })

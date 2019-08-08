@@ -1,7 +1,7 @@
 
 // 类型常量
 const SIZE_VALUE = ['large', 'small', 'mini', 'medium']
-const TYPE_VALUE = ['input', 'number', 'radio', 'checkbox', 'select', 'date', 'remoteselect', 'fuzzyinput', 'elautocomplete']
+const TYPE_VALUE = ['input', 'number', 'radio', 'checkbox', 'select', 'slider', 'date', 'remoteselect', 'fuzzyinput', 'elautocomplete']
 const INPUT_VALUE = ['text', 'textarea', 'email', 'password']
 const SLOT_TYPE_VALUE = ['prepend', 'append']
 const DATE_VALUE = ['date', 'daterange', 'datetime', 'datetimerange']
@@ -63,6 +63,8 @@ export const formGroupProps = {
  * form-item props
  */
 export const formItemProps = {
+  // 单项成行
+  inline: Boolean,
   itemType: {
     type: String,
     default: 'input',
@@ -116,7 +118,7 @@ export const formItemProps = {
   rows: Number,
 
   /**
-   * 计数器私有属性
+   * 计数器私有属性/slider
    */
   min: Number,
   max: {
@@ -133,6 +135,16 @@ export const formItemProps = {
   filterable: {
     type: Boolean,
     default: false
+  },
+  /**
+   * slider
+   */
+  showInput: Boolean,
+  marks: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   },
 
   /**
@@ -231,7 +243,7 @@ export const formItemProps = {
     default: 'pageNum'
   },
   // 总页数位置
-  pagePath: {
+  pageCountPath: {
     type: Array,
     default: () => {
       return ['result', 'pages']

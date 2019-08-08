@@ -40,8 +40,7 @@ export default {
       selectOptions: [],
       requestParamsChangeFlg: false,
       loading: false,
-      pageNum: 1,
-      pages: 0
+      pageCount: 0
     }
   },
   computed: {
@@ -82,65 +81,30 @@ export default {
     },
     async getRemoteData () {
       if (!this.isNeedRequest()) return
+      const { fmtRequestParams, pagination, hostName, apiUrl, method, resultPath, autoget, selectOptions, pageNumKey, pageCountPath } = this
 
-      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, autoget, pagination, pageNum, selectOptions, pageNumKey, pagePath, relativeProp } = this
-      if (relativeProp && relativeProp.length) {
-        // 强关联项值为undefined 或者空 不请求
-        const strongRealtiveBool = relativeProp.every(item => {
-          const { require, paramkey } = item
-          if (require) {
-            return !(remoteParams[paramkey] === undefined || remoteParams[paramkey] === '')
-          }
-          return true
-        })
-        if (!strongRealtiveBool) return
-      }
+      const _params = Object.assign({}, fmtRequestParams)
+      pagination && Object.assign(_params, { [pageNumKey]: 1 })
 
-      const _params = Object.assign({}, remoteParams)
-      if (pagination) {
-        Object.assign(_params, { [pageNumKey]: pageNum })
-      }
-
-      this.loading = true
-      const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
-      this.loading = false
-
-      if (pagination) {
-        let pages = res
-        pagePath.forEach(item => {
-          pages = pages[item]
-        })
-        this.pages = pages
-      }
-
-      let result = res
-      // debugger
-      // 数据位置
-      resultPath.forEach(item => {
-        result = result[item]
+      // 数据请求
+      Object.assign(this, {
+        laoding: true
       })
-      if (!result) return
-      this.selectOptions = result.map(item => {
-        return {
-          ...item,
-          label: item[labelkeyname],
-          value: item[valuekeyname]
-        }
-      }).concat(selectOptions)
-      if (autoget) {
-        // 主动更新情况 设置值为第一项
-        this.value = this.selectOptions[0].value
-      }
-      this.updateFlg = false
+      const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
+      // 总分页数
+      pagination && (this.pageCount = util.parsePath(res, pageCountPath, 0))
+      // 数据结果 考虑分页情况 追加上历史数据
+      this.selectOptions = util.parsePath(res, resultPath, []).concat(selectOptions)
+      // 主动更新情况 设置值为第一项
+      autoget && this.selectOptions.length && (this.value = this.selectOptions[0].value)
     },
     reset () {
       this.value = undefined
     },
-    /** *******************************
-     ** Fn: handleScroll
-     ** Intro: 处理滚动行为
-     ** @params: direction 为true代表向下滚动,为false代表向上滚动
-     *********************************/
+    /**
+     * 处理滚动行为
+     * @param {Boolean} direction true代表向下滚动,为false代表向上滚动
+     */
     handleScroll (direction) {
       if (direction) {
         // 请求下一页的数据
