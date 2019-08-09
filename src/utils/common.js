@@ -56,12 +56,12 @@ export const util = {
   filterOptions (options, labelkeyname, valuekeyname, filterVals) {
     const filterValsKeys = Object.keys(filterVals)
     // filterVals中存在undefined 说明有必填项无实际值，直接返回为空
-    if (filterValsKeys && filterValsKeys.every(key => filterVals[key] === undefined)) return []
+    if (filterValsKeys.length && filterValsKeys.every(key => filterVals[key] === undefined)) return []
     // 此时 filterVals 可能包含了必填项，存在有效值的一般关联项
     const res = []
     options.forEach(item => {
       // 不存在过滤条件 || 满足filterVals所有条件
-      if (!filterValsKeys || filterValsKeys.every(key => item[key] === filterVals[key])) {
+      if (!filterValsKeys.length || filterValsKeys.every(key => item[key] === filterVals[key])) {
         // format
         res.push(this.fmtOptionData(item, labelkeyname, valuekeyname))
       }
@@ -78,7 +78,7 @@ export const util = {
    */
   fmtParams ({ props, params, parent, keyname }) {
     const _params = { ...params }
-    props.forEach(item => {
+    props.length && props.forEach(item => {
       const { prop, require } = item
       // params 键值
       const key = item[keyname]

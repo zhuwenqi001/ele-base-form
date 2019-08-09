@@ -8,7 +8,7 @@
     @focus="getRemoteData"
   >
     <el-option
-      v-for="(option, i) in compoundSelectOptions"
+      v-for="(option, i) in fmtOptions"
       :key="i +'_'+ option.value"
       :disabled="disableflg === option[disablekeyname]"
       :value="option.value"
@@ -25,7 +25,7 @@ export default {
   name: 'Remoteselect',
   props: {
     ...formItemProps,
-    paramsProps: {
+    paramProp: {
       type: Array,
       default: () => ([])
     },

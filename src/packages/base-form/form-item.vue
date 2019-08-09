@@ -172,7 +172,7 @@ export default {
     // 拆分请求参数 筛选参数
     const paramProp = []
     const filterProp = []
-    relativeProp.forEach(prop => {
+    relativeProp.length && relativeProp.forEach(prop => {
       const { paramkey, filterkey } = prop
       paramkey !== undefined && paramProp.push(prop)
       filterkey !== undefined && filterProp.push(prop)
