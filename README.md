@@ -1,20 +1,32 @@
 # ele-base-form
 
->ele-base-form 是一个基于element-ui组件的vue插件。项目实现效果为以简约的、配置化方式表达form表单，提供常用的表单关联入口，支持远程校验等。旨在为存在大量表单的后台管理系统开发提供便利。
+![npm version](https://img.shields.io/npm/v/ele-base-form)
+![npm download](https://img.shields.io/npm/dm/ele-base-form)
 
-此外感谢【daz10020】(https://github.com/daz10020)review，让代码质量有了很大的提升，有了工具有了更强的扩展性。
+<p align="center">
+  <a href="#简介">简介</a> &nbsp;|&nbsp;
+  <a href="快速使用">快速使用</a> &nbsp;|&nbsp;
+  <a href="API">API</a>
+</p>
+
+## 简介
+ele-base-form 是一个基于element-ui组件的vue组件。
+
+项目实现效果为以简约的、配置化方式表达form表单。旨在为存在大量表单的后台管理系统开发提供便利。
+
 ## 快速使用
+
 ### install
 ```
 npm i --save ele-base-form
 ```
-### 引入 main.js
+### 引入
 ```
 import eleBaseForm from 'ele-base-form'
 Vue.use(EleBaseForm)
 ```
 ### views 中使用
-变更操作主要是对formOpt的可修改，修改需要符合vue的数据更新监听机制。
+** 对form表单的变更操作主要是对formOpt的修改，修改需要符合vue 数据更新监听机制。
 ```
 <template>
   <ele-base-form v-bind="formOpt" />
@@ -80,9 +92,7 @@ Vue.use(EleBaseForm)
 - 支持下拉框远程请求、下拉分页、输入框远程校验等
 
 ## API
-### 表单整体
-
-#### attribute
+### ele-base-form props
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|
@@ -90,13 +100,12 @@ Vue.use(EleBaseForm)
 | size | 表单size | String | medium / small / mini | small |
 | disabled | 表单整体禁用,优先级高于item disabled | Boolean | - | false |
 | labelWidth | 表单统一label宽度 | String | - | '150px' |v
-| currentFormValue | 表单当前值。常用于编辑状态-表单赋值。其中对象key值和表单prop对应 | Object | - | {} |
+| currentFormValue | 表单当前值。对表单进行外部赋值，对象key值和表单prop对应 | Object | - | {} |
 | hostName | 表单中请求通用域名 | String | - | - |
 | formrefname | 表单ref,常用场景：动态生成多个表单项，操作表单item时，item回调返回formrefname,以该参数作为找到当前表单的标志 | String | - | baseform |
 | forms | 表单配置数组 | Array | - | - |
 
-
-#### Methods
+### ele-base-form Methods
 
 | 事件名称 | 说明 | 回调参数 |
 | --- |------|:----:|
@@ -104,29 +113,68 @@ Vue.use(EleBaseForm)
 | reset | 重置表单数据 | - |
 | clear | 清空表单数据 | - |
 
-### 表单item
 
-#### attribute
+### forms item detail
+
+> 通用配置
+
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|
-| itemType | item 类型 | String | 'input', 'number', 'radio', 'checkbox', 'select', 'date', 'remoteselect', ~~'fuzzyinput'~~, ~~'elautocomplete'~~ | 'input' |
+| itemType | item 类型 | String | [input](#input类型支持配置), 'number', 'radio', 'checkbox', 'select','slider', 'date', 'remoteselect' | 'input' |
 | label | item描述 | String | - | - |
 | labelWidth | label 宽度 | String | - | - |
 | prop | item key,必填，数组数据以它为key | String | - | - |
 | visible | 表单项是否渲染 | Boolean | - | true |
 | disabled | item 禁用 | Boolean | - | false |
+| inline | 是否自成一行 | Boolean | - | false |
 | rules | 表单项验证规则 | Array | - | - |  |
 | placeholder | placeholder | String | - | 输入框默认：请输入内容 ， 下拉框：请选择 |
 | defaultValue | item 默认值 | String, Array, Number | - | - |
-| inputType | itemType:'input' 时延伸类型 | String | 'text', 'textarea', 'email', 'password' | 'text' |
-| slots | itemType:'input/number' 时支持append、prepend插入 | Array | [{type:'append',text:''},{type:'prepend',text:''}] | - |
-| rows | itemType:'input',inputType:'textarea' 行数 | Number | - | - |
+| change | 选中回调 | Function | - | - |
+
+> input类型支持配置
+
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- |------|:----:|-----|:-----:|
+| inputType | 输入框延伸类型 | String | 'text', 'textarea', 'email', 'password' | 'text' |
+| slots | 支持append、prepend插入 | Array | [{type:'append',text:''},{type:'prepend',text:''}] | - |
+| rows | inputType:'textarea' 行数 | Number | - | - |
+
+> number类型支持配置
+
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- |------|:----:|-----|:-----:|
+| slots | 支持append、prepend插入 | Array | [{type:'append',text:''},{type:'prepend',text:''}] | - |
 | min | itemType:'number' 最小值 | Number | - | - |
 | max | itemType:'number' 最大值 | Number | - | 2147483647 |
 | step | itemType:'number' 增减粒度 | Number | - | 1 |
 | stepStrictly | itemType:'number' 是否严格控制递增递减step | Boolean | - | false |
-| options | itemType:'select|radio|checkbox' 选项信息 | Array | - | - |
-| filterable | itemType:'select' 是否可搜索 | Boolean | - | false |
+
+> radio类型支持配置
+
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- |------|:----:|-----|:-----:|
+| options | 选项信息，支持['example1','example2']或者[{label:'example1',value:'value1',name:'cc'}] | Array | - | - |
+| labelkeyname | 数据展示label选择项 | String | - | 'label' |
+| valuekeyname | 数据展示value选择项 | String | - | 'value' |
+
+> checkbox类型支持配置
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- |------|:----:|-----|:-----:|
+| options | 选项信息，支持['example1','example2']或者[{label:'example1',value:'value1',name:'cc'}] | Array | - | - |
+| labelkeyname | 数据展示label选择项 | String | - | 'label' |
+| valuekeyname | 数据展示value选择项 | String | - | 'value' |
+
+> select类型支持配置
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- |------|:----:|-----|:-----:|
+| options | 选项信息，支持['example1','example2']或者[{label:'example1',value:'value1',name:'cc'}] | Array | - | - |
+| filterable | 是否可搜索 | Boolean | - | false |
+| labelkeyname | 数据展示label选择项 | String | - | 'label' |
+| valuekeyname | 数据展示value选择项 | String | - | 'value' |
+| disablekeyname | 数据展示禁用key | String | label,value.... | - |
+| disableflg | 数据禁用flg | Boolean,String | - | - |
+
 | dateType | itemType:'date' 延伸的日期类型 | String | 'date', 'daterange', 'datetime', 'datetimerange' | 'date' |
 | format | itemType:'date' 日期输入框格式 | String | timestamp/yyyy/MM/dd/HH/mm/ss... | 'yyyy-MM-dd' |
 | valueFormat | itemType:'date' 日期输入框值绑定格式 | String | timestamp/yyyy/MM/dd/HH/mm/ss... | 'yyyy-MM-dd' |
