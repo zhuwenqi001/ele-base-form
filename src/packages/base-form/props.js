@@ -56,6 +56,11 @@ export const formGroupProps = {
   formrefname: {
     type: String,
     default: 'baseform'
+  },
+  // vuex store中使用
+  stateName: {
+    type: String,
+    default: 'baseform'
   }
 }
 

@@ -23,6 +23,7 @@
 <script>
 import { formGroupProps } from './props'
 import FormItem from './form-item'
+import store from '../store/index'
 
 export default {
   name: 'EleBaseForm',
@@ -102,8 +103,21 @@ export default {
     },
     // 表单值同步变化
     recieveFormItemValue (obj) {
-      const { params } = this
+      const { params, stateName } = this
       this.params = Object.assign({}, params, obj)
+      if (stateName !== undefined) {
+        const _params = {}
+        this.forms.forEach(item => {
+          if (typeof item.prop === 'string') {
+            Object.assign(_params, { [item.prop]: this.params[item.prop] })
+          } else {
+            item.prop.forEach(vv => {
+              Object.assign(_params, { [vv]: this.params[vv] })
+            })
+          }
+        })
+        store.dispatch('SetFormsVal', { [stateName]: _params })
+      }
     },
     // 获取表单值
     getParams (callback, e) {
