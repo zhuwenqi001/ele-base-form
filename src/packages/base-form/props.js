@@ -231,6 +231,7 @@ export const formItemProps = {
   },
   // 选中回调
   change: Function,
+  selectInfo: Function,
   pagination: {
     type: Boolean,
     default: false

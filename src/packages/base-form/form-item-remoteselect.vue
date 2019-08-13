@@ -63,10 +63,11 @@ export default {
   },
   watch: {
     value (newval) {
-      const { prop } = this
+      const { prop, compoundSelectOptions } = this
       const obj = {}
       obj[prop] = newval
       this.$emit('recieveRemoteSelectValue', obj)
+      this.$emit('recieveRemoteSelectInfomation', compoundSelectOptions.filter(item => item.value === newval)[0])
     },
     remoteParams () {
       this.value = undefined
