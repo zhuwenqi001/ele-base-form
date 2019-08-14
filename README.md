@@ -4,29 +4,50 @@
 ![npm download](https://img.shields.io/npm/dm/ele-base-form)
 
 <p align="center">
-  <a href="#简介">简介</a> &nbsp;|&nbsp;
-  <a href="快速使用">快速使用</a> &nbsp;|&nbsp;
+  <a href="intro">简介</a> &nbsp;|&nbsp;
+  <a href="use">快速使用</a> &nbsp;|&nbsp;
   <a href="API">API</a>
 </p>
 
-## 简介
-ele-base-form 是一个基于element-ui组件的vue组件。
+## <p id="intro">简介</p>
+> ele-base-form 是一个基于element-ui组件的vue组件。  
+> 项目实现效果为以简约的、配置化方式表达form表单。旨在为存在大量表单的后台管理系统开发提供便利。
 
-项目实现效果为以简约的、配置化方式表达form表单。旨在为存在大量表单的后台管理系统开发提供便利。
+## <p id="use">快速使用</p>
 
-## 快速使用
-
-### install
+1. install
 ```
 npm i --save ele-base-form
 ```
-### 引入
+2. 引入
 ```
 import eleBaseForm from 'ele-base-form'
 Vue.use(EleBaseForm)
 ```
-### views 中使用
-** 对form表单的变更操作主要是对formOpt的修改，修改需要符合vue 数据更新监听机制。
+3. webpack配置  
+组件基于es6编写，需要在项目的打包规则中添加插件，将组件es6转成es5。避免build时编译报错
+```
+module.exports={
+  ...
+  module:{
+    rules:[
+      ...
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include:[
+          ...
+          resolve('node_modules/ele-base-form/src'),
+          resolve('node_modules/ele-base-form/src/packages'),
+        ]
+      }
+    ]
+  }
+}
+```
+
+4. views 中使用  
+在页面组件中，对form表单的变更操作主要是对formOpt的修改。修改需要符合vue数据更新监听机制。
 ```
 <template>
   <ele-base-form v-bind="formOpt" />
@@ -77,8 +98,10 @@ Vue.use(EleBaseForm)
 </script>
 ```
 
-## 常用场景
-- 对表格数据的编辑操作，将rows Object 赋值给currentFormValue。（注意rows Object key值需要与forms中的prop值对应）
+## 常见操作场景
+1. 表格数据的编辑。将rows Object赋值给currentFormValue，即可完成表单赋值。（注意rows Object key值需要与forms中的prop值对应）
+2. 动态生成的表单建议添加formrefname参数。进行内部关联操作时（下拉框选中回调），change回调会返回formrefname，界面可以通过this.$refs[formrefname]找到操作项。（ref属性和formrefname需要值一致）
+3. form item关联。提供部分简单关联入口见[relativeProp]()
 - 动态生成多个表单时，为表单配置使用formrefname参数。在涉及到表单内部(下拉框)关联操作时，可以由change回调返回formrefname，通过this.$refs[formrefname]找到操作项。（ref属性和formrefname需要值一致）
 - form item关联（B依赖A）（目前集中在下拉，后面持续完善）。
     - 使用配置关联的效果
@@ -91,7 +114,7 @@ Vue.use(EleBaseForm)
       - change方法，作为操作forms数组的入口
 - 支持下拉框远程请求、下拉分页、输入框远程校验等
 
-## API
+## <p id="api">API</p>
 ### ele-base-form props
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
@@ -132,7 +155,7 @@ Vue.use(EleBaseForm)
 | defaultValue | item 默认值 | String, Array, Number | - | - |
 | change | 选中回调 | Function | - | - |
 
-> input类型支持配置
+>  #input类型支持配置
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|
