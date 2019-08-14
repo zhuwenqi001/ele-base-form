@@ -4,9 +4,9 @@
 ![npm download](https://img.shields.io/npm/dm/ele-base-form)
 
 <p align="center">
-  <a href="intro">简介</a> &nbsp;|&nbsp;
-  <a href="use">快速使用</a> &nbsp;|&nbsp;
-  <a href="API">API</a>
+  <a href="#intro">简介</a> &nbsp;|&nbsp;
+  <a href="#use">快速使用</a> &nbsp;|&nbsp;
+  <a href="#API">API</a>
 </p>
 
 ## <p id="intro">简介</p>
