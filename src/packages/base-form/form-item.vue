@@ -58,10 +58,10 @@
       @change="handleChange"
     >
       <el-radio
-        v-for="({label,value,disabled},i) in fmtOptions"
+        v-for="({label,value,optionDisable:disabeld},i) in fmtOptions"
         :key="`${i}_${value}`"
         :label="value"
-        :disabled="disabled"
+        :disabled="optionDisable"
       >
         {{ label }}
       </el-radio>
@@ -75,10 +75,10 @@
       @change="handleChange"
     >
       <el-checkbox
-        v-for="({label,value,disabled},i) in fmtOptions"
+        v-for="({label,value,optionDisable:disabled},i) in fmtOptions"
         :key="`${i}_${value}`"
         :label="value"
-        :disabled="disabled"
+        :disabled="optionDisable"
       >
         {{ label }}
       </el-checkbox>
@@ -94,10 +94,11 @@
       @change="handleChange"
     >
       <el-option
-        v-for="({label,value,disabled},i) in fmtOptions"
+        v-for="({label,value,optionDisable:disabled},i) in fmtOptions"
         :key="`${i}_${value}`"
         :label="label"
         :value="value"
+        :disabled="optionDisable"
       />
     </el-select>
 
