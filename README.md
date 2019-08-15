@@ -141,7 +141,7 @@ module.exports={
 | change | 选中回调，返回选中value | Function | - | - |
 | selectInfo | 选中回调,返回当前项的所有信息 | Function | - | - |
 
->  <span id="inputType">input类型额外配置</span>
+> <span id="inputType">input类型额外配置</span>
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|
