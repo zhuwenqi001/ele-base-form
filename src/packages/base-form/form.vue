@@ -42,7 +42,7 @@ export default {
     showForms () {
       const { visibleForms, currentFormValue, labelWidth, disabled, hostName, formrefname } = this
       return visibleForms.map(form => {
-        const { prop } = form
+        const { prop, itemType } = form
         let itemCurval
         if (Array.isArray(prop)) {
           // 时间范围 prop为数组
@@ -50,6 +50,8 @@ export default {
           prop.forEach(propitem => {
             itemCurval.push(currentFormValue[propitem] || '')
           })
+        } else if (itemType === 'slider') {
+          itemCurval = Number(currentFormValue[prop])
         } else {
           itemCurval = currentFormValue[prop]
         }

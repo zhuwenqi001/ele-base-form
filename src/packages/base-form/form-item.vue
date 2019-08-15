@@ -225,8 +225,7 @@ export default {
       }
     },
     itemCur (newval) {
-      const { itemType } = this
-      this.value = itemType === 'slider' ? Number(newval) : newval
+      this.value = newval
     }
   },
   created () {
