@@ -60,8 +60,9 @@ export const util = {
     // 此时 filterVals 可能包含了必填项，存在有效值的一般关联项
     const res = []
     options.forEach(item => {
+      // item不为null &&
       // 不存在过滤条件 || 满足filterVals所有条件
-      if (!filterValsKeys.length || filterValsKeys.every(key => item[key] === filterVals[key])) {
+      if (item !== null && (!filterValsKeys.length || filterValsKeys.every(key => item[key] === filterVals[key]))) {
         // format
         res.push(this.fmtOptionData(item, labelkeyname, valuekeyname))
       }
