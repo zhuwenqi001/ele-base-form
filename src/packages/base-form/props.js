@@ -94,7 +94,7 @@ export const formItemProps = {
     }
   },
   placeholder: String,
-  defaultValue: [String, Array, Number],
+  defaultValue: [String, Array, Number, Boolean],
   current: [String, Array, Object, Number],
   parent: Object,
   // 对于循环生成多表单情况，提供formrefname 作为标识
