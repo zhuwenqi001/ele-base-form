@@ -61,8 +61,9 @@ export default {
   },
   watch: {
     value (newval) {
-      const { prop, parent } = this
-      parent[prop] !== newval && this.$emit('recieveRemoteSelectValue', { [prop]: newval })
+      const { prop, fmtOptions } = this
+      this.$emit('recieveRemoteSelectValue', { [prop]: newval })
+      this.$emit('recieveRemoteSelectInfomation', fmtOptions.filter(item => item.value === newval)[0])
     },
     // 监听请求参数的变化
     fmtRequestParams (newval, oldval) {
@@ -87,10 +88,9 @@ export default {
       pagination && Object.assign(_params, { [pageNumKey]: 1 })
 
       // 数据请求
-      Object.assign(this, {
-        laoding: true
-      })
+      this.loading = true
       const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
+      this.loading = false
       // 总分页数
       pagination && (this.pageCount = util.parsePath(res, pageCountPath, 0))
       // 数据结果 考虑分页情况 追加上历史数据

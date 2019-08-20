@@ -100,7 +100,7 @@ module.exports={
 
 
 ## <p id="api">API</p>
-### ele-base-form props
+### Props
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|:-----:|:-----:|
 | inline | 表单项排列规则 | Boolean | - | false |
@@ -113,7 +113,13 @@ module.exports={
 | formrefname | 添加在form item上的表单ref。常用场景：动态生成多个表单项，操作表单item时，item回调返回formrefname,以该参数作为找到当前表单的标志 | String | - | baseform |
 | forms | 表单配置数组 | Array | - | - |
 
-### ele-base-form Methods
+### Events
+
+| 事件名称 | 说明 | 回调参数 |
+| --- |------|:----:|
+| paramsChange | 监听表单params变化 | params |
+
+### Methods
 
 | 事件名称 | 说明 | 回调参数 |
 | --- |------|:----:|
@@ -122,7 +128,7 @@ module.exports={
 | clear | 清空表单数据 | - |
 
 
-### forms item detail
+### forms数组元素（对象）规则
 
 > 通用配置
 
@@ -206,6 +212,7 @@ module.exports={
 | <span id="relativeProp">relativeProp</span> | [表单关联信息，通过prop搭建关系](#relativePropDetail)，[{prop:'',paramkey:'',filterkey:'',require:true/false]| Array | - | - |
 | autoget | 自动请求下拉列表数据 | Boolean | - | false |
 | change | 选中回调 | Function | - | - |
+| selectInfo | 选中回调,返回选中项的所有信息 | Function | - | - |
 
 ### <span id="relativePropDetail">relativeProp详细介绍</span>  
 以A作为B的依赖为例子  

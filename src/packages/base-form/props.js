@@ -233,6 +233,8 @@ export const formItemProps = {
   },
   // 选中回调
   change: Function,
+  // 选中回调，返回选中项的所有信息（remoteselect）
+  selectInfo: Function,
   pagination: {
     type: Boolean,
     default: false

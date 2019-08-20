@@ -152,6 +152,7 @@
       :pagination="pagination"
       :page-num-key="pageNumKey"
       @recieveRemoteSelectValue="recieveRemoteSelectValue"
+      @recieveRemoteSelectInfomation="selectInfomation"
     />
   </el-form-item>
 </template>
@@ -294,6 +295,11 @@ export default {
     // 接收remoteSelect 值
     recieveRemoteSelectValue (obj) {
       this.$emit('recieveFormItemValue', obj)
+    },
+    // 接收select information传给回调函数selectInfo
+    selectInfomation (info) {
+      const { selectInfo } = this
+      selectInfo && selectInfo(info)
     },
     // change emit
     handleChange (value) {

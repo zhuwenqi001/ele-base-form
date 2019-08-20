@@ -64,6 +64,10 @@ export default {
     },
     currentFormValue () {
       this.initParams()
+    },
+    params () {
+      const { params } = this
+      this.$emit('paramsChange', params)
     }
   },
   created () {
