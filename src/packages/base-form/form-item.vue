@@ -171,6 +171,7 @@ export default {
   props: formItemProps,
   data () {
     const { relativeProp } = this
+    debugger
     // 拆分请求参数 筛选参数
     const paramProp = []
     const filterProp = []
@@ -272,6 +273,7 @@ export default {
     // 初始化value
     initVal () {
       const { defaultValue, itemCur, itemType } = this
+      debugger
       let _value = defaultValue
       itemCur !== undefined && (_value = itemCur)
       if (itemType === 'checkbox' && _value === undefined) {
