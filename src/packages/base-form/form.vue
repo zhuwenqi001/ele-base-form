@@ -1,6 +1,6 @@
 <template>
   <el-form
-    :ref="formrefname"
+    ref="baseform"
     :inline="inline"
     :size="size"
     :label-width="labelWidth"
@@ -129,6 +129,7 @@ export default {
       showForms.forEach(v => {
         const { prop } = v
         const ref = generateKey(prop)
+        $refs.baseform.clearValidate()
         $refs[ref][0].reset(type)
       })
     },
