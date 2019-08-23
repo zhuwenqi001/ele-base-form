@@ -106,6 +106,8 @@ export default {
             label: '日期范围',
             prop: ['startdate', 'enddate'],
             dateType: 'daterange',
+            format: 'yyyy-MM-dd',
+            valueFormat: 'timestamp',
             startPlaceholder: '开始时间',
             endPlaceholder: '结束时间'
           },
