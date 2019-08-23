@@ -47,7 +47,7 @@ export default {
           // 时间范围 prop为数组
           itemCurval = []
           prop.forEach(propitem => {
-            itemCurval.push(currentFormValue[propitem] || '')
+            itemCurval.push(currentFormValue[propitem])
           })
         } else {
           itemCurval = currentFormValue[prop]

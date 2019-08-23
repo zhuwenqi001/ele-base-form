@@ -58,10 +58,10 @@
       @change="handleChange"
     >
       <el-radio
-        v-for="({label,value,optionDisable:disabeld},i) in fmtOptions"
-        :key="`${i}_${value}`"
-        :label="value"
-        :disabled="optionDisable"
+        v-for="(item,i) in fmtOptions"
+        :key="`${i}_${item.value}`"
+        :label="item.value"
+        :disabled="item.disabled"
       >
         {{ label }}
       </el-radio>
@@ -75,10 +75,10 @@
       @change="handleChange"
     >
       <el-checkbox
-        v-for="({label,value,optionDisable:disabled},i) in fmtOptions"
-        :key="`${i}_${value}`"
-        :label="value"
-        :disabled="optionDisable"
+        v-for="(item,i) in fmtOptions"
+        :key="`${i}_${item.value}`"
+        :label="item.value"
+        :disabled="item.disabled"
       >
         {{ label }}
       </el-checkbox>
@@ -94,17 +94,17 @@
       @change="handleChange"
     >
       <el-option
-        v-for="({label,value,optionDisable:disabled},i) in fmtOptions"
-        :key="`${i}_${value}`"
-        :label="label"
-        :value="value"
-        :disabled="optionDisable"
+        v-for="(item,i) in fmtOptions"
+        :key="`${i}_${item.value}`"
+        :label="item.label"
+        :value="item.value"
+        :disabled="item.disabled"
       />
     </el-select>
 
     <el-slider
       v-else-if="itemType === 'slider'"
-      v-model="value"
+      v-model="itemValue"
       :disabled="disabled"
       :max="max"
       :min="min"
@@ -171,7 +171,6 @@ export default {
   props: formItemProps,
   data () {
     const { relativeProp } = this
-    debugger
     // 拆分请求参数 筛选参数
     const paramProp = []
     const filterProp = []
@@ -272,14 +271,12 @@ export default {
     },
     // 初始化value
     initVal () {
-      const { defaultValue, itemCur, itemType } = this
-      debugger
+      const { defaultValue, itemCur, itemType, prop } = this
       let _value = defaultValue
       itemCur !== undefined && (_value = itemCur)
-      if (itemType === 'checkbox' && _value === undefined) {
-        // checkbox 初始值不可以为undefined
-        _value = []
-      }
+      Array.isArray(prop) && _value.some(item => item === undefined) && (_value = []);
+      // checkbox 初始值不可以为undefined
+      (itemType === 'checkbox' && _value === undefined) && (_value = [])
       this.itemValue = _value
     },
     // 重置

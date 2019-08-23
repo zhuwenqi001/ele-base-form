@@ -91,7 +91,8 @@ export default {
             label: '日期',
             prop: 'date',
             placeholder: '请选择日期'
-          }, {
+          },
+          {
             itemType: 'date',
             label: '日期时间',
             prop: 'datetime',
