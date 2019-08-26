@@ -165,6 +165,13 @@ module.exports={
 | step | 增减粒度 | Number | - | 1 |
 | stepStrictly | 是否严格控制递增递减step | Boolean | - | false |
 
+> silder类型额外配置
+
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- |------|:----:|-----|:-----:|
+| showInput | 是否显示silder输入框 | Boolean | - | - |
+| marks | 滑块坐标标记 | Object | - | - |
+
 > radio/checkbox/select类型额外配置
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |

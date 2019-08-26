@@ -56,7 +56,7 @@ export const util = {
   filterOptions (options, labelkeyname, valuekeyname, filterVals) {
     const filterValsKeys = Object.keys(filterVals)
     // filterVals中存在undefined 说明有必填项无实际值，直接返回为空
-    if (filterValsKeys.length && filterValsKeys.every(key => filterVals[key] === undefined)) return []
+    if (filterValsKeys.length && filterValsKeys.some(key => filterVals[key] === undefined)) return []
     // 此时 filterVals 可能包含了必填项，存在有效值的一般关联项
     const res = []
     options.forEach(item => {
@@ -111,7 +111,7 @@ export const util = {
   },
   // 路径生成
   parsePath (data, path = [], defaultVal = undefined) {
-    if (path.length) return defaultVal
+    if (!path.length) return defaultVal
     let res = data
     try {
       path.forEach(key => {

@@ -1,13 +1,13 @@
 {
   "name": "ele-base-form",
   "description": "component baseform",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "author": "zhuwenqi <896111958@qq.com>",
   "license": "MIT",
   "private": false,
   "main": "dist/ele-base-form.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --port 8081",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --port 8088",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
 
 // 类型常量
 const SIZE_VALUE = ['large', 'small', 'mini', 'medium']
-const TYPE_VALUE = ['input', 'number', 'radio', 'checkbox', 'select', 'slider', 'date', 'remoteselect', 'fuzzyinput', 'elautocomplete']
+const TYPE_VALUE = ['input', 'number', 'radio', 'checkbox', 'select', 'slider', 'date', 'remoteselect', 'elautocomplete']
 const INPUT_VALUE = ['text', 'textarea', 'email', 'password']
 const SLOT_TYPE_VALUE = ['prepend', 'append']
 const DATE_VALUE = ['date', 'daterange', 'datetime', 'datetimerange']
