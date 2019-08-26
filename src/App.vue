@@ -109,7 +109,8 @@ export default {
             format: 'yyyy-MM-dd',
             valueFormat: 'timestamp',
             startPlaceholder: '开始时间',
-            endPlaceholder: '结束时间'
+            endPlaceholder: '结束时间',
+            defaultValue: [new Date().getTime(), new Date().getTime() - 24 * 60 * 60 * 1000]
           },
           {
             itemType: 'date',
@@ -117,8 +118,11 @@ export default {
             prop: ['starttime', 'endtime'],
             dateType: 'datetimerange',
             startPlaceholder: '开始时间',
-            endPlaceholder: '结束时间'
-          }, {
+            endPlaceholder: '结束时间',
+            defaultValue: [new Date().getTime(), new Date().getTime() - 24 * 60 * 60 * 1000],
+            valueFormat: 'timestamp'
+          },
+          {
             itemType: 'remoteselect',
             label: '远程下拉框',
             prop: 'remoteselect',

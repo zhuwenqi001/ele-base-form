@@ -273,8 +273,11 @@ export default {
     initVal () {
       const { defaultValue, itemCur, itemType, prop } = this
       let _value = defaultValue
-      itemCur !== undefined && (_value = itemCur)
-      Array.isArray(prop) && _value.some(item => item === undefined) && (_value = []);
+      if (Array.isArray(prop)) {
+        itemCur.every(item => item !== undefined) && (_value = itemCur)
+      } else {
+        itemCur !== undefined && (_value = itemCur)
+      }
       // checkbox 初始值不可以为undefined
       (itemType === 'checkbox' && _value === undefined) && (_value = [])
       this.itemValue = _value
