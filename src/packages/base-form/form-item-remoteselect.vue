@@ -22,7 +22,7 @@ import httpService from '../../utils/httpService'
 import { util } from '../../utils/common'
 
 export default {
-  name: 'Remoteselect',
+  name: 'RemoteSelect',
   props: {
     ...formItemProps,
     paramProp: {
