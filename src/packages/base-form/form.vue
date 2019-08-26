@@ -118,8 +118,8 @@ export default {
     },
     // 表单提交验证
     handleFormValidate (callback, e) {
-      const { getParams, formrefname } = this
-      this.$refs[formrefname].validate(valid => {
+      const { getParams } = this
+      this.$refs.baseform.validate(valid => {
         callback && typeof callback === 'function' && callback(valid, getParams(), e)
       })
     },
