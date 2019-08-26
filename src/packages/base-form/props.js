@@ -157,15 +157,9 @@ export const formItemProps = {
     validator: (val) => { return oneOf(val, DATE_VALUE) }
   },
   // 输入框格式
-  format: {
-    type: String,
-    default: 'yyyy-MM-dd'
-  },
+  format: String,
+  valueFormat: String,
   // 绑定值格式
-  valueFormat: {
-    type: String,
-    default: 'yyyy-MM-dd'
-  },
   startPlaceholder: String,
   endPlaceholder: String,
 

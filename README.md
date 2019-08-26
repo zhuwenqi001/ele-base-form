@@ -186,8 +186,8 @@ module.exports={
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- |------|:----:|-----|:-----:|
 | dateType | 延伸的日期类型 | String | date, daterange, datetime, datetimerange | date |
-| format | 日期输入框格式 | String | timestamp/yyyy/MM/dd/HH/mm/ss | 'yyyy-MM-dd' |
-| valueFormat | 日期输入框值绑定格式 | String | timestamp/yyyy/MM/dd/HH/mm/ss | 'yyyy-MM-dd' |
+| format | 日期输入框格式 | String | timestamp/yyyy/MM/dd/HH/mm/ss | - |
+| valueFormat | 日期输入框值绑定格式 | String | timestamp/yyyy/MM/dd/HH/mm/ss | - |
 | startPlaceholder | dateType:'daterange/datetimerange' 第一项placeholder | String | - | - |
 | endPlaceholder | dateType:'daterange/datetimerange' 第二项placeholder | String | - | - |
 
