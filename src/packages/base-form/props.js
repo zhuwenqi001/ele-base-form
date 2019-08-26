@@ -23,10 +23,7 @@ function oneOf (value, typeArr) {
  * form 组合props
  */
 export const formGroupProps = {
-  inline: {
-    type: Boolean,
-    default: false
-  },
+  inline: Boolean,
   forms: {
     type: Array,
     required: true
