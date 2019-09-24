@@ -40,7 +40,8 @@ export default {
       selectOptions: [],
       requestParamsChangeFlg: false,
       loading: false,
-      pageCount: 0
+      pageCount: 0,
+      initFlg: true
     }
   },
   computed: {
@@ -67,7 +68,8 @@ export default {
     },
     // 监听请求参数的变化
     fmtRequestParams (newval, oldval) {
-      this.requestParamsChangeFlg = util.isObjectValueEqual(newval, oldval)
+      // 比较对象完全相同，返回true，changeflg为false
+      this.requestParamsChangeFlg = !(util.isObjectValueEqual(newval, oldval))
     }
   },
   created () {
@@ -75,13 +77,15 @@ export default {
   },
   methods: {
     isNeedRequest () {
-      // 请求参数中不存在undefined（必填项无有效值） || 参数值相比上次发生了变化
-      const { requestParamsChangeFlg, fmtRequestParams } = this
+      // 参数值相比上次发生了变化 || 请求参数中存在undefined（必填项无有效值）---发起请求
+      // 初次请求 ---发起请求
+      const { requestParamsChangeFlg, fmtRequestParams, initFlg } = this
       const keys = Object.keys(fmtRequestParams)
-      return requestParamsChangeFlg || keys.some(key => fmtRequestParams[key] === undefined)
+      return requestParamsChangeFlg || keys.some(key => fmtRequestParams[key] === undefined) || initFlg
     },
     async getRemoteData () {
       if (!this.isNeedRequest()) return
+      this.initFlg = false
       const { fmtRequestParams, pagination, hostName, apiUrl, method, resultPath, autoget, selectOptions, pageNumKey, pageCountPath } = this
 
       const _params = Object.assign({}, fmtRequestParams)
