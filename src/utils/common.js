@@ -5,7 +5,7 @@ export const util = {
       return list.filter(f)[0]
     }
     // just return if obj is immutable value
-    if (obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== 'object' || obj instanceof RegExp) {
       return obj
     }
 

@@ -6,7 +6,6 @@ import EleBaseForm from './index.js'
 // import selectScroll from './directives/selectScroll'
 Vue.use(EleBaseForm)
 // Vue.use(selectScroll)
-
 Vue.use(Element)
 /* eslint-disable no-new */
 new Vue({

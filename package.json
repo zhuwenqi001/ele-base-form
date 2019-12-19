@@ -1,7 +1,7 @@
 {
-  "name": "ele-base-form",
+  "name": "zto-npm",
   "description": "component baseform",
-  "version": "1.0.30",
+  "version": "1.0.35",
   "author": "zhuwenqi <896111958@qq.com>",
   "license": "MIT",
   "private": false,

@@ -144,6 +144,7 @@ export const formItemProps = {
     type: Boolean,
     default: false
   },
+  clearable: Boolean,
 
   /**
    * 日期

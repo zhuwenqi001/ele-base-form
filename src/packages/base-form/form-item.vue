@@ -92,6 +92,7 @@
       :placeholder="handleArrItem(placeholder,'请选择')"
       :filterable="filterable"
       :multiple="multiple"
+      :clearable="clearable"
       @change="handleChange"
     >
       <el-option
@@ -135,6 +136,7 @@
       :host-name="hostName"
       :api-url="apiUrl"
       :method="method"
+      :item-cur="itemCur"
       :remote-params="privateRemoteParams"
       :relative-prop="relativeProp"
       :parent="parent"
@@ -196,7 +198,7 @@ export default {
   },
   watch: {
     value (newval) {
-      const { prop } = this
+      const { prop, itemType, max } = this
       const obj = {}
       if (Array.isArray(prop)) {
         prop.forEach((vv, i) => {
@@ -204,6 +206,9 @@ export default {
         })
       } else {
         obj[prop] = newval
+        if (itemType === 'input' && typeof newval === 'string' && max !== undefined) {
+          obj[prop] = newval.substr(0, max)
+        }
       }
       this.$emit('recieveFormItemValue', obj)
     },

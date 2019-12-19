@@ -44,17 +44,14 @@ export default {
     }
   },
   computed: {
-    filterObj () {
-      const { staticFilter, relativeFilter } = this
-      return Object.assign(staticFilter, relativeFilter)
-    },
     compoundSelectOptions () {
-      const { selectOptions, staticOptions, filterObj, relativeProp } = this
+      const { selectOptions, staticOptions, relativeProp, staticFilter, relativeFilter, selectionFilter } = this
       let _compoundOptions = staticOptions.concat(selectOptions)
+      _compoundOptions = selectionFilter(staticFilter, _compoundOptions)
       if (relativeProp && relativeProp.length) {
-        Object.keys(filterObj).forEach(item => {
-          if (relativeProp[relativeProp.map(vv => vv.filterkey).indexOf(item)].require || filterObj[item] !== undefined) {
-            _compoundOptions = _compoundOptions.filter(opt => opt[item] === filterObj[item])
+        Object.keys(relativeFilter).forEach(item => {
+          if (relativeProp[relativeProp.map(vv => vv.filterkey).indexOf(item)].require || relativeFilter[item] !== undefined) {
+            _compoundOptions = _compoundOptions.filter(opt => opt[item] === relativeFilter[item])
           }
         })
       }
@@ -68,6 +65,9 @@ export default {
       obj[prop] = newval
       this.$emit('recieveRemoteSelectValue', obj)
       this.$emit('recieveRemoteSelectInfomation', compoundSelectOptions.filter(item => item.value === newval)[0])
+    },
+    itemCur (newval) {
+      this.value = newval
     },
     remoteParams () {
       this.value = undefined
@@ -154,6 +154,13 @@ export default {
         this.updateFlg = true
         this.getRemoteData()
       }
+    },
+    selectionFilter (params, options) {
+      let _options = options
+      params && Object.keys(params).forEach(item => {
+        _options = _options.filter(opt => opt[item] === params[item])
+      })
+      return _options
     }
   }
 }
