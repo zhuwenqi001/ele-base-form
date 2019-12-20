@@ -100,6 +100,7 @@
         :key="i+'_'+handleArrItem(option.value,option)"
         :label="handleArrItem(option.label,option)"
         :value="handleArrItem(option.value,option)"
+        :disabled="option.disabled"
       />
     </el-select>
     <el-slider
