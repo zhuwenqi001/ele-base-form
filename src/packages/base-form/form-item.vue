@@ -209,6 +209,7 @@ export default {
         obj[prop] = newval
         if (itemType === 'input' && typeof newval === 'string' && max !== undefined) {
           obj[prop] = newval.substr(0, max)
+          this.value = obj[prop]
         }
       }
       this.$emit('recieveFormItemValue', obj)
