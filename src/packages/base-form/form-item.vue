@@ -9,7 +9,7 @@
     <!-- 普通输入框 -->
     <el-input
       v-if="itemType==='input'"
-      v-model.trim="value"
+      v-model="value"
       v-loading="loading"
       :disabled="disabled"
       :placeholder="handleArrItem(placeholder,'请输入内容')"
