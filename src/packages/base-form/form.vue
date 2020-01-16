@@ -136,6 +136,10 @@ export default {
     // 表单清空
     clear () {
       this.reset('clear')
+    },
+    specialClear (prop) {
+      const ref = this.generateKey(prop)
+      this.$refs[ref][0].reset('clear')
     }
   }
 }
