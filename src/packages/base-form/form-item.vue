@@ -127,6 +127,53 @@
       :placeholder="placeholder"
     />
 
+    <!-- 可搜索输入框 -->
+    <el-autocomplete
+      v-else-if="itemType === 'autocomplete'"
+      v-model="value"
+      :fetch-suggestions="querySearchAsync"
+      placeholder="请输入搜索内容"
+    />
+
+    <!-- 可搜索下拉框 -->
+    <template v-else-if="itemType === 'autoselect'">
+      <el-select
+        v-model="value"
+        multiple
+        filterable
+        remote
+        reserve-keyword
+        placeholder="请输入关键词"
+        :loading="loading"
+        :remote-method="querySearchAsyncSelect"
+        @change="autoselectChange"
+      >
+        <el-option
+          v-for="item in selectOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+/>
+      </el-select>
+      <el-dropdown trigger="click"
+size="medium" :hide-on-click="false" @command="autoselectDropDownCB">
+        <span class="el-dropdown-link">
+          <el-tooltip class="item"
+effect="dark" content="查看已选项" placement="top-start">
+            <i class="autoselect-icon el-icon-view"/>
+          </el-tooltip>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="selected in selectedItems"
+:key="selected.value" icon="el-icon-check" :command="selected.value">
+{{ selected.label }}
+</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </template>
+    <!-- 联级搜索下拉 -->
+    <el-cascader v-else-if="itemType === 'autocascader'"
+:props="autocascaderProps"/>
     <!-- 远程下拉框 -->
     <remote-select
       v-else-if="itemType === 'remoteselect'"
@@ -171,12 +218,18 @@ export default {
   },
   props: formItemProps,
   data () {
-    const { remoteParams } = this
+    const { remoteParams, autocascaderLazyload } = this
     return {
       value: undefined,
       privateRemoteParams: remoteParams,
       relativeFilter: {},
-      loading: false
+      loading: false,
+      selectOptions: [],
+      selectedItems: [],
+      autocascaderProps: {
+        lazy: true,
+        lazyLoad: autocascaderLazyload
+      }
     }
   },
   computed: {
@@ -365,6 +418,102 @@ export default {
         })
       }
       return realRules
+    },
+    // 可搜索输入框
+    async querySearchAsync (queryString, cb) {
+      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop } = this
+      let selectOptions = []
+      if (queryString !== '') {
+        const _params = {
+          ...remoteParams,
+          [prop]: queryString
+        }
+        const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
+        let result = res
+        // debugger
+        // 数据位置
+        resultPath.forEach(item => {
+          result = result[item]
+        })
+        if (result) {
+          selectOptions = result.map(item => {
+            return {
+              ...item,
+              label: item[labelkeyname],
+              value: item[valuekeyname]
+            }
+          })
+        }
+      }
+      cb(selectOptions)
+    },
+    // 可搜索下拉框
+    async querySearchAsyncSelect (query) {
+      this.loading = false
+      if (query !== '') {
+        const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop } = this
+        const _params = {
+          ...remoteParams,
+          [prop]: query
+        }
+        this.loading = true
+        const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
+        this.loading = false
+        let result = res
+        // 数据位置
+        resultPath.forEach(item => {
+          result = result[item]
+        })
+        if (result) {
+          this.selectOptions = result.map(item => {
+            return {
+              ...item,
+              label: item[labelkeyname],
+              value: item[valuekeyname]
+            }
+          })
+        }
+      } else {
+        this.selectOptions = []
+        }
+    },
+    autoselectChange (valueArr) {
+      const fmtValueArr = this.selectOptions.filter(v => valueArr.indexOf(v.value) > -1)
+      this.selectedItems = fmtValueArr
+    },
+    autoselectDropDownCB (value) {
+      const index = this.selectedItems.map(vv => vv.value).indexOf(value)
+      this.selectedItems.splice(index, 1)
+      this.value = this.selectedItems.map(item => item.value)
+    },
+    // 远程联级下拉框
+    autocascaderLazyload (node, resolve) {
+      console.log(node)
+      resolve([{ label: '1', value: 1 }])
+      // if (query !== '') {
+      //   const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop } = this
+      //   const _params = {
+      //     ...remoteParams,
+      //     [prop]: query
+      //   }
+      //   const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
+      //   let result = res
+      //   // 数据位置
+      //   resultPath.forEach(item => {
+      //     result = result[item]
+      //   })
+      //   if (result) {
+      //     this.selectOptions = result.map(item => {
+      //       return {
+      //         ...item,
+      //         label: item[labelkeyname],
+      //         value: item[valuekeyname]
+      //       }
+      //     })
+      //   }
+      //   } else {
+      //     this.selectOptions = [];
+      //   }
     }
   }
 }
@@ -407,5 +556,13 @@ export default {
 }
 .base-form .el-slider{
   margin-left:10px;
+}
+.el-select + .el-dropdown{
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+.autoselect-icon{
+  cursor:pointer;
 }
 </style>
