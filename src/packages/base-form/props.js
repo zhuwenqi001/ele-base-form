@@ -248,5 +248,6 @@ export const formItemProps = {
   },
   // 唯一性验证
   checkApi: Object,
-  itemCur: [String, Number, Boolean, Array]
+  itemCur: [String, Number, Boolean, Array],
+  requestKey: String
 }
