@@ -248,8 +248,8 @@ export default {
       autocascaderProps: {
         lazy: true,
         lazyLoad: autocascaderLazyload,
-        multiple: true
-        // checkStrictly: true
+        multiple: true,
+        checkStrictly: true
       }
     }
   },
