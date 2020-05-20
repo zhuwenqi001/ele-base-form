@@ -192,6 +192,7 @@ export const formItemProps = {
     type: String,
     default: 'label'
   },
+  labelkeyarr: Array,
   valuekeyname: {
     type: String,
     default: 'value'
@@ -249,5 +250,8 @@ export const formItemProps = {
   // 唯一性验证
   checkApi: Object,
   itemCur: [String, Number, Boolean, Array],
-  requestKey: String
+  requestKey: String,
+  keyname: String,
+  // 远程联级选择
+  deep: Number
 }

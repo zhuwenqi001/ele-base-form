@@ -9,7 +9,7 @@
   >
     <template v-for="item in showForms">
       <form-item
-        :key="generateKey(item.prop)+(item.defaultValue||'')"
+        :key="generateKey(item.prop,item.keyname)+(item.defaultValue||'')"
         :ref="generateKey(item.prop)"
         v-bind="item"
         :parent="params"
@@ -77,7 +77,8 @@ export default {
     this.initParams()
   },
   methods: {
-    generateKey (prop) {
+    generateKey (prop, keyname) {
+      if (keyname) return keyname
       if (Array.isArray(prop)) {
         return prop[0]
       }

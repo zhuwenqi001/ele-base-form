@@ -141,7 +141,7 @@
         v-model="value"
         filterable
         remote
-        multiple
+        :multiple="multiple"
         reserve-keyword
         placeholder="请输入关键词"
         :loading="loading"
@@ -175,10 +175,10 @@
           <el-dropdown-item
             v-for="selected in selectedItems"
             :key="selected.value"
-            icon="el-icon-check"
             :command="selected.value"
           >
             {{ selected.label }}
+            <i class="el-icon-close" />
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -186,10 +186,12 @@
     <!-- 联级搜索下拉 -->
     <el-cascader
       v-else-if="itemType === 'autocascader'"
+      ref="autocascaderRef"
       v-model="value"
       :show-all-levels="false"
       :props="autocascaderProps"
       filterable
+      @change="handleAutocascaderChange"
     />
     <!-- 远程下拉框 -->
     <remote-select
@@ -235,14 +237,14 @@ export default {
   },
   props: formItemProps,
   data () {
-    const { remoteParams, autocascaderLazyload } = this
+    const { remoteParams, autocascaderLazyload, options } = this
     return {
       value: undefined,
       privateRemoteParams: remoteParams,
       relativeFilter: {},
       loading: false,
-      selectOptions: [],
-      selectedItems: [],
+      selectOptions: options || [],
+      selectedItems: options || [],
       autocascaderProps: {
         lazy: true,
         lazyLoad: autocascaderLazyload,
@@ -440,7 +442,7 @@ export default {
     },
     // 可搜索输入框
     async querySearchAsync (queryString, cb) {
-      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop } = this
+      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, labelkeyarr, valuekeyname, prop } = this
       let selectOptions = []
       if (queryString !== '') {
         const _params = {
@@ -449,16 +451,23 @@ export default {
         }
         const res = await httpService.accessAPI({ hostName, apiUrl, method, params: _params })
         let result = res
-        // debugger
         // 数据位置
         resultPath.forEach(item => {
           result = result[item]
         })
         if (result) {
           selectOptions = result.map(item => {
+            let label = ''
+            if (labelkeyarr) {
+              labelkeyarr.forEach(v => {
+                label += (item[v] + '-')
+              })
+            } else {
+              label = item[labelkeyname]
+            }
             return {
               ...item,
-              label: item[labelkeyname],
+              label,
               value: item[valuekeyname]
             }
           })
@@ -470,7 +479,7 @@ export default {
     async querySearchAsyncSelect (query) {
       this.loading = false
       if (query !== '') {
-        const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, requestKey } = this
+        const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, labelkeyarr, valuekeyname, requestKey } = this
         const _params = {
           ...remoteParams,
           [requestKey]: query
@@ -485,9 +494,20 @@ export default {
         })
         if (result) {
           this.selectOptions = result.map(item => {
+            let label = ''
+            if (labelkeyarr) {
+              labelkeyarr.forEach((v, i) => {
+                if (item[v]) {
+                  i !== 0 && (label += '-')
+                  label += item[v]
+                }
+              })
+            } else {
+              label = item[labelkeyname]
+            }
             return {
               ...item,
-              label: item[labelkeyname],
+              label,
               value: item[valuekeyname]
             }
           })
@@ -497,8 +517,13 @@ export default {
       }
     },
     autoselectChange (valueArr) {
-      const fmtValueArr = this.selectOptions.filter(v => valueArr.indexOf(v.value) > -1)
-      this.selectedItems = fmtValueArr
+      const _all = this.selectOptions.concat(this.selectedItems)
+      this.selectedItems = valueArr.map(item => {
+        return _all.filter(v => v.value === item)[0]
+      })
+      if (this.change) {
+        this.change(this.selectedItems, this.formrefname)
+      }
     },
     autoselectDropDownCB (value) {
       const index = this.selectedItems.map(vv => vv.value).indexOf(value)
@@ -507,7 +532,11 @@ export default {
     },
     // 远程联级下拉框
     async autocascaderLazyload (node, resolve) {
-      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop, requestKey } = this
+      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop, requestKey, deep } = this
+      if (deep === node.level) {
+        resolve([])
+        return
+      }
       const parentCodeValue = (node.value === undefined || null) ? '' : node.value
       const _params = {
         ...remoteParams,
@@ -521,15 +550,28 @@ export default {
       })
       if (result) {
         const ss = result.map(item => {
-          return {
+          const obj = {
             ...item,
             label: item[labelkeyname],
             value: item[valuekeyname]
           }
+          if (deep) {
+            Object.assign(obj, {
+              leaf: node.level >= (deep - 1)
+            })
+          }
+          return obj
         })
         resolve(ss)
       }
+    },
+    handleAutocascaderChange () {
+      const { change, formrefname } = this
+      if (change) {
+        change(this.$refs['autocascaderRef'].getCheckedNodes(), formrefname)
+      }
     }
+
   }
 }
 </script>
