@@ -1,7 +1,7 @@
 
 // 类型常量
 const SIZE_VALUE = ['large', 'small', 'mini', 'medium']
-const TYPE_VALUE = ['input', 'number', 'radio', 'checkbox', 'select', 'slider', 'date', 'remoteselect', 'fuzzyinput', 'autocomplete', 'autoselect', 'autocascader']
+const TYPE_VALUE = ['input', 'number', 'radio', 'checkbox', 'select', 'slider', 'date', 'remoteselect', 'fuzzyinput', 'autocomplete', 'autoselect', 'autocascader', 'cascader']
 const INPUT_VALUE = ['text', 'textarea', 'email', 'password']
 const SLOT_TYPE_VALUE = ['prepend', 'append']
 const DATE_VALUE = ['date', 'daterange', 'datetime', 'datetimerange']
@@ -253,5 +253,6 @@ export const formItemProps = {
   requestKey: String,
   keyname: String,
   // 远程联级选择
-  deep: Number
+  deep: Number,
+  cascaderProps: Object
 }

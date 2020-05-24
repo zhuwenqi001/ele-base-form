@@ -191,6 +191,7 @@
       :show-all-levels="false"
       :props="autocascaderProps"
       filterable
+      :options="options"
       @change="handleAutocascaderChange"
     />
     <!-- 远程下拉框 -->
@@ -532,7 +533,7 @@ export default {
     },
     // 远程联级下拉框
     async autocascaderLazyload (node, resolve) {
-      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, prop, requestKey, deep } = this
+      const { hostName, apiUrl, method, resultPath, remoteParams, labelkeyname, valuekeyname, requestKey, deep } = this
       if (deep === node.level) {
         resolve([])
         return
@@ -549,7 +550,7 @@ export default {
         result = result[item]
       })
       if (result) {
-        const ss = result.map(item => {
+        const remoteResult = result.map(item => {
           const obj = {
             ...item,
             label: item[labelkeyname],
@@ -562,7 +563,7 @@ export default {
           }
           return obj
         })
-        resolve(ss)
+        resolve(remoteResult)
       }
     },
     handleAutocascaderChange () {
