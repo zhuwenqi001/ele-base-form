@@ -201,6 +201,8 @@ export const formItemProps = {
   disableflg: [Boolean, String, Number],
   // 下拉框多选
   multiple: Boolean,
+  // label tootip 入口
+  tooltip: String,
   // 静态拼接数据
   staticOptions: {
     type: Array,

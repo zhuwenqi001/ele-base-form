@@ -1,11 +1,26 @@
 <template>
   <el-form-item
-    :label="label"
     :prop="realprop"
     :rules="realRules"
     :label-width="labelWidth"
     :class="(inline===false)?'specailBlock':''"
   >
+    <template
+      v-if="label"
+      slot="label"
+    >
+      {{ label }}
+      <template v-if="tooltip">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="tooltip"
+          placement="top-start"
+        >
+          <i class="el-icon-info" />
+        </el-tooltip>
+      </template>
+    </template>
     <!-- 普通输入框 -->
     <el-input
       v-if="itemType==='input'"
@@ -517,11 +532,16 @@ export default {
         this.selectOptions = []
       }
     },
-    autoselectChange (valueArr) {
-      const _all = this.selectOptions.concat(this.selectedItems)
-      this.selectedItems = valueArr.map(item => {
-        return _all.filter(v => v.value === item)[0]
-      })
+    autoselectChange (value) {
+      let _all = this.selectOptions
+      if (this.multiple) {
+        _all = this.selectOptions.concat(this.selectedItems)
+        this.selectedItems = value.map(item => {
+          return _all.filter(v => v.value === item)[0]
+        })
+      } else {
+        this.selectedItems = _all.filter(v => v.value === value)
+      }
       if (this.change) {
         this.change(this.selectedItems, this.formrefname)
       }
@@ -529,7 +549,11 @@ export default {
     autoselectDropDownCB (value) {
       const index = this.selectedItems.map(vv => vv.value).indexOf(value)
       this.selectedItems.splice(index, 1)
-      this.value = this.selectedItems.map(item => item.value)
+      if (this.multiple) {
+        this.value = this.selectedItems.map(item => item.value)
+      } else {
+        this.value = ''
+      }
     },
     // 远程联级下拉框
     async autocascaderLazyload (node, resolve) {
